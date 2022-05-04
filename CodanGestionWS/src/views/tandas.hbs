@@ -1,0 +1,59 @@
+<br />
+<div class="col-md-4 mx-auto">
+    <div class="card">
+        <div class="card-header text-center">
+            <h3>Buscar Tanda</h3>
+        </div>
+        <div class="card-body">
+            <div class="d-flex justify-content-center">
+                <form action="/tandas/buscar" method="POST">
+                    <div class="form-group">
+                        <input type="text" name="id_tanda" class="form-control" placeholder="Introduzca un ID..." autofocus />
+                    </div>
+                    <div class="form-group">
+                        <button class="btn btn-success btn-lg" type="submit">
+                            Buscar
+                        </button>
+                    </div>
+            </form>
+                <form action="/" method="GET">
+                    <div class="form-group">
+                        <button class="btn btn-success btn-lg" type="submit">
+                            Atras
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<br />
+<table class="table text-center">
+    <tr class="thead-dark">
+        <th scope="col">Id</th>
+        <th scope="col">Id Personalizada</th>
+        <th scope="col">Jefe</th>
+        <th scope="col">Linea</th>
+        <th scope="col">Producto</th>
+        <th scope="col">Inicio</th>
+        <th scope="col">Fin</th>
+        <th scope="col">Kg Teoricos</th>
+        <th scope="col">Kg Reales</th>
+        <th scope="col">Eficiencia (%)</th>
+    </tr>
+    {{#each rows}}
+    <tr class="table-light">
+        <th scope="row">{{id}}</th>
+        <td>{{id_personalizada}}</td>
+        <td>{{jefe}}</td>
+        <td>{{linea}}</td>
+        <td>{{producto}}</td>
+        <td>{{fechahora_inicio}}</td>
+        <td>{{fechahora_fin}}</td>
+        <td>{{kg_teoricos}}</td>
+        <td>{{kg_reales}}</td>
+        <td>{{eficiencia}}</td>
+    </tr>
+    {{/each}}
+</table>
+<br />
