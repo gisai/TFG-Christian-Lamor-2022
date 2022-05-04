@@ -1,10 +1,13 @@
-const express = require('express');
-const path = require('path');
-const exphbs = require('express-handlebars');
-const methodOverride = require('method-override');
+var express = require('express');
+var path = require('path');
+var exphbs = require('express-handlebars');
+var methodOverride = require('method-override');
+var session = require('express-session');
+var flash = require('express-flash');
+var db = require('./database');
 
 // Initializations
-const app = express();
+var app = express();
 
 // Settings
 app.set('port', process.env.PORT || 3000);
@@ -20,6 +23,13 @@ app.set('view engine', '.hbs');
 // Middleware
 app.use(express.urlencoded({ extended: false }));
 app.use(methodOverride('_method'));
+app.use(session({
+    secret: 'c0d4n;',
+    resave: false,
+    saveUninitialized: true,
+    cookie: { maxAge: 60000 }
+}));
+app.use(flash());
 
 // Global Variables
 
@@ -34,3 +44,5 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.listen(app.get('port'), () => {
     console.log('Server on port ', app.get('port'));
 });
+
+module.exports = app;

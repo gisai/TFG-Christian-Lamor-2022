@@ -7,6 +7,7 @@
 </div>
 {{/each}}
 
+<br />
 <div class="col-md-4 mx-auto">
     <div class="card">
         <div class="card-header text-center">
@@ -15,11 +16,15 @@
         <div class="card-body">
             <div class="d-flex justify-content-center">
                 <form action="/index" method="POST">
+                    <input type="hidden" name="id_tanda" value="{{id_tanda}}" />
                     <div class="form-group">
-                        <input type="number" step="any" name="kilosTeoricos" class="form-control" placeholder="Kilos teoricos" autofocus />
+                        <input type="text" name="id_personalizada" class="form-control" placeholder="Id personalizada (opcional)" autofocus maxlength="24"/>
                     </div>
                     <div class="form-group">
-                        <input type="number" step="any" name="kilosReales" class="form-control" placeholder="Kilos reales" />
+                        <input type="number" step="any" name="kg_teoricos" class="form-control" placeholder="Kilos teoricos" min="0" max="1000" />
+                    </div>
+                    <div class="form-group">
+                        <input type="number" step="any" name="kg_reales" class="form-control" placeholder="Kilos reales" min="0" max="1000" />
                     </div>
                     <div class="form-group">
                         <button class="btn btn-success btn-block">

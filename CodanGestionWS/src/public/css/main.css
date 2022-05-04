@@ -7,10 +7,32 @@ body {
     /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
 }
 
-.bottom-text {
+.footer {
+    position: relative;
+    width: 100%;
+    min-height: 200px;
+    padding: 120px 0;
+    z-index: 1;
+    background: white;
+}
+
+.upm {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    bottom: 75px;
+}
+
+.img {
+    width: 10%;
+    height: 10%;
+}
+
+.footer-text {
     position: absolute;
     bottom: 10px;
-    right: 20px;
-    width: 200px;
-    text-align: right;
+    text-align: center;
+    width: 100%;
+    color: black;
 }

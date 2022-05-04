@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const pool = require('../database');
 
 router.get('/', (req, res) => {
     res.render('index');
@@ -10,10 +11,10 @@ router.get('/start', (req, res) => {
 });
 
 router.post('/start', (req, res) => {
-    const { jefeEquipo, linea, producto } = req.body;
-    const errors = [];
+    var { jefe, linea, producto } = req.body;
+    var errors = [];
 
-    if (!jefeEquipo) {
+    if (!jefe) {
         errors.push({ text: "Por favor, rellene el campo \"Jefe de equipo\"." });
     }
     if (!linea) {
@@ -25,31 +26,31 @@ router.post('/start', (req, res) => {
     if (errors.length > 0) {
         res.render('start', {
             errors,
-            jefeEquipo,
+            jefe,
             linea,
             producto
         });
-    } else {
-        var hoy = new Date();
-        var fecha = hoy.getDate() + '-' + (hoy.getMonth() + 1) + '-' + hoy.getFullYear();
-        var hora = hoy.getHours() + ':' + hoy.getMinutes() + ':' + hoy.getSeconds();
-        var fechaYHora = fecha + ' ' + hora;
-        //var id = ;
-
-        console.log("{\n    Jefe: " + req.body.jefeEquipo
-            + "\n    Linea: " + req.body.linea
-            + "\n    Producto: " + req.body.producto
-            + "\n    Fecha: " + fechaYHora + "\n}\n");
-
-        res.render('incidence');
+    }
+    else {
+        var tandaRow = {
+            jefe,
+            linea,
+            producto
+        }
+        var id_tanda;
+        pool.query('INSERT INTO inicio_tandas SET ?', [tandaRow], (err, result) => {
+            if (err) throw err;
+            id_tanda = result.insertId;
+            res.render('incidence', { id_tanda });
+        });
     }
 });
 
-router.post('/incidence', (req, res) => {
-    const { incidencia, horaParada, minutosParada, horaReinicio, minutosReinicio } = req.body;
-    const errors = [];
+router.post('/incidence/:id', async (req, res) => {
+    var { id_tanda, descripcion, horaParada, minutosParada, horaReinicio, minutosReinicio } = req.body;
+    var errors = [];
 
-    if (!incidencia) {
+    if (!descripcion) {
         errors.push({ text: "Por favor, rellene el campo \"Descripcion\"." });
     }
     if (horaParada == "--" || minutosParada == "--") {
@@ -61,7 +62,7 @@ router.post('/incidence', (req, res) => {
     if (errors.length > 0) {
         res.render('incidence', {
             errors,
-            incidencia,
+            descripcion,
             horaParada,
             minutosParada,
             horaReinicio,
@@ -71,14 +72,15 @@ router.post('/incidence', (req, res) => {
     else {
         var parada = (Number(horaParada) * 60) + Number(minutosParada);
         var reinicio = (Number(horaReinicio) * 60) + Number(minutosReinicio);
-        var minutosPerdidos = reinicio - parada;
+        var minutos_perdidos = reinicio - parada;
 
-        if (minutosPerdidos <= 0)
+        if (minutos_perdidos <= 0) {
             errors.push({ text: "La hora de reinicio debe ser posterior a la hora de parada." });
+        }
         if (errors.length > 0) {
             res.render('incidence', {
                 errors,
-                incidencia,
+                descripcion,
                 horaParada,
                 minutosParada,
                 horaReinicio,
@@ -86,44 +88,82 @@ router.post('/incidence', (req, res) => {
             });
         }
         else {
-            console.log("{\n    Incidencia: " + req.body.incidencia
-                + "\n    Hora de parada: " + parada
-                + "\n    Hora de reinicio: " + reinicio
-                + "\n    Minutos perdidos: " + minutosPerdidos + "\n}\n");
-            res.render('incidence');
+            var hora_parada = '' + horaParada + ':' + minutosParada + ':00';
+            var hora_reinicio = '' + horaReinicio + ':' + minutosReinicio + ':00';
+            var incidenciaRow = {
+                id_tanda,
+                descripcion,
+                hora_parada,
+                hora_reinicio,
+                minutos_perdidos
+            }
+            await pool.query('INSERT INTO incidencias SET ?', [incidenciaRow]);
+            res.render('incidence', { id_tanda });
         }
     }
 });
 
-router.post('/eficience', (req, res) => {
-    res.render('eficience');
+router.post('/eficience/:id', (req, res) => {
+    var { id_tanda } = req.body;
+    res.render('eficience', { id_tanda });
 });
 
-router.post('/index', (req, res) => {
-    const { kilosTeoricos, kilosReales } = req.body;
-    const errors = [];
+router.post('/index', async (req, res) => {
+    var { id_tanda, id_personalizada, kg_teoricos, kg_reales } = req.body;
+    var errors = [];
 
-    if (!kilosTeoricos) {
+    if (!kg_teoricos) {
         errors.push({ text: "Por favor, rellene el campo \"Kilos teoricos\"." });
     }
-    if (!kilosReales) {
+    if (!kg_reales) {
         errors.push({ text: "Por favor, rellene el campo \"Kilos reales\"." });
     }
     if (errors.length > 0) {
         res.render('eficience', {
             errors,
-            kilosTeoricos,
-            kilosReales
+            kg_teoricos,
+            kg_reales
         });
     }
     else {
-        var eficiencia = (kilosReales / kilosTeoricos) * 100;
-        eficiencia = eficiencia.toFixed(3);
-
-        console.log("{\n    KgTeoricos: " + kilosTeoricos
-            + "\n    KgReales: " + kilosReales
-            + "\n    Eficiencia: " + eficiencia + " %\n}\n")
+        var eficiencia = kg_reales / kg_teoricos * 100;
+        var eficienciaRow = {
+            id_tanda,
+            id_personalizada,
+            kg_teoricos,
+            kg_reales,
+            eficiencia
+        }
+        await pool.query('INSERT INTO fin_tandas SET ?', [eficienciaRow]);
         res.render('index');
+    }
+});
+
+router.get('/tandas', async (req, res) => {
+    var rows;
+    pool.query('SELECT * FROM tandas', (err, result) => {
+        if (err) throw err;
+        rows = result;
+        res.render('tandas', { rows });
+    });
+});
+
+router.post('/tandas/buscar', async (req, res) => {
+    var { id_tanda } = req.body;
+    var rows;
+    if (id_tanda == '' || id_tanda == null) {
+        pool.query('SELECT * FROM tandas', (err, result) => {
+            if (err) throw err;
+            rows = result;
+            res.render('tandas', { rows });
+        });
+    }
+    else {
+        pool.query('SELECT * FROM tandas WHERE id = ? OR id_personalizada = ?', [id_tanda, id_tanda], (err, result) => {
+            if (err) throw err;
+            rows = result;
+            res.render('tandas', { rows });
+        });
     }
 });
 

@@ -7,6 +7,7 @@
 </div>
 {{/each}}
 
+<br />
 <div class="col-md-4 mx-auto">
     <div class="card">
         <div class="card-header text-center">
@@ -14,10 +15,11 @@
         </div>
         <div class="card-body">
             <div class="d-flex justify-content-center">
-                <form action="/incidence" method="POST">
+                <form action="/incidence/{{id_tanda}}" method="POST">
+                    <input type="hidden" name="id_tanda" value="{{id_tanda}}" />
                     <div class="col">
                         <div class="form-group">
-                            <textarea name="incidencia" class="form-control" placeholder="Descripcion de la incidencia" autofocus></textarea>
+                            <textarea name="descripcion" class="form-control" placeholder="Descripcion de la incidencia" autofocus maxlength="140"></textarea>
                         </div>
                         <div class="row">
                             <div class="form-group col-md-6 text-center">
@@ -214,12 +216,15 @@
                                 Crear Incidencia
                             </button>
                         </div>
-                        <hr />
-                        <div class="form-group text-center">
-                            <button class="btn btn-danger" type="submit" formaction="/eficience">
-                                Finalizar
-                            </button>
-                        </div>
+                    </div>
+                </form>
+                <hr />
+                <form action="/eficience/{{id_tanda}}" method="POST">
+                    <input type="hidden" name="id_tanda" value="{{id_tanda}}" />
+                    <div class="form-group">
+                        <button class="btn btn-danger" type="submit">
+                            Finalizar
+                        </button>
                     </div>
                 </form>
             </div>
