@@ -2,14 +2,8 @@
   "ExpandedNodes": [
     "",
     "\\src",
-    "\\src\\models",
-    "\\src\\public",
-    "\\src\\public\\assets",
-    "\\src\\public\\assets\\img",
-    "\\src\\public\\css",
     "\\src\\routes",
-    "\\src\\views",
-    "\\src\\views\\layouts"
+    "\\src\\views"
   ],
   "SelectedNode": "\\src\\routes\\index.js",
   "PreviewInSolutionExplorer": false

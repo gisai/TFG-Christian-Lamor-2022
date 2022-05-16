@@ -1,0 +1,14 @@
+class="form-control"
+
+<div class="form-group">
+                        <button class="btn btn-success btn-lg" type="submit">
+                            Buscar
+                        </button>
+                    </div>
+            </form>
+                <form action="/" method="GET">
+                    <div class="form-group">
+                        <button class="btn btn-danger btn-lg" type="submit">
+                            Atras
+                        </button>
+                    </div>

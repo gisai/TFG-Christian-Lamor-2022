@@ -1,4 +1,4 @@
-DROP DATABASE codan_gestion_db;
+#DROP DATABASE codan_gestion_db;
 CREATE DATABASE codan_gestion_db;
 USE codan_gestion_db;
 
@@ -43,8 +43,20 @@ CREATE VIEW tandas AS (
     INNER JOIN fin_tandas ON inicio_tandas.id = fin_tandas.id_tanda
 );
 
-INSERT INTO inicio_tandas (id, jefe, linea, producto, fechahora_inicio) VALUES
-	('1', 'Christian Lamor Utrilla', 'A017', 'Concha 100g', '2022-03-23 8:00:00');
-INSERT INTO fin_tandas VALUES ('1', 'CONCH-MT-A017', '2022-03-23 20:00:00', '80', '76.4', '95.5');
-INSERT INTO incidencias (id_tanda, descripcion, hora_parada, hora_reinicio, minutos_perdidos) VALUES
-	('1', 'Horno averiado', '18:00:00', '19:00:00', '60');
+#DROP TABLE datos;
+CREATE TABLE datos (
+	num_unidades INT NOT NULL,
+    peso_bobina_c8086 DECIMAL(4,2) NOT NULL,
+    peso_total_bobinas DECIMAL(4,2) NOT NULL,
+    peso_cubeta_c8231 DECIMAL(4,2) NOT NULL,
+    peso_bobina_cubeta_c8635 DECIMAL(4,2) NOT NULL,
+    num_cubetas INT NOT NULL
+);
+INSERT INTO datos VALUES (5, 0.75, 3.75, 21.05, 2.7, 2);
+
+#DROP TABLE cubeta_miniconchas;
+CREATE TABLE cubeta_miniconchas (
+	peso_cubeta_neto DECIMAL(4,1) NOT NULL,
+    unidad DECIMAL(3,1) NOT NULL,
+    hora TIMESTAMP NOT NULL DEFAULT current_timestamp
+);

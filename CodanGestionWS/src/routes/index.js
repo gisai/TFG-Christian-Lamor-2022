@@ -46,6 +46,11 @@ router.post('/start', (req, res) => {
     }
 });
 
+/*router.get('/incidence/?id=:id', (req, res) => {
+    var id_tanda = req.query.valid;
+    res.render('incidence', id_tanda);
+});*/
+
 router.post('/incidence/:id', async (req, res) => {
     var { id_tanda, descripcion, horaParada, minutosParada, horaReinicio, minutosReinicio } = req.body;
     var errors = [];
@@ -135,7 +140,7 @@ router.post('/index', async (req, res) => {
             eficiencia
         }
         await pool.query('INSERT INTO fin_tandas SET ?', [eficienciaRow]);
-        res.render('index');
+        res.redirect('/');
     }
 });
 
@@ -165,6 +170,43 @@ router.post('/tandas/buscar', async (req, res) => {
             res.render('tandas', { rows });
         });
     }
+});
+
+router.get('/tolerancia', (req, res) => {
+    res.render('tolerancia');
+});
+
+router.post('/cubeta', (req, res) => {
+    var codigo_semiterminado = req.body;
+    res.render('cubeta', { codigo_semiterminado });
+});
+
+router.post('/calcular', (req, res) => {
+    var peso_cubeta = req.body;
+    pool.query('SELECT * FROM datos', (err, result) => {
+        if (err) throw err;
+        var datos = result;
+
+        var num_unidades = datos[0].num_unidades;
+        var peso_bobina_c8086 = datos[0].peso_bobina_c8086;
+        var peso_total_bobinas = datos[0].peso_total_bobinas;
+        var peso_cubeta_c8231 = datos[0].peso_cubeta_c8231;
+        var peso_bobina_cubeta_c8635 = datos[0].peso_bobina_cubeta_c8635;
+        var num_cubetas = datos[0].num_cubetas
+
+        var peso_cubeta_neto = (peso_cubeta/2) - peso_cubeta_c8231 - peso_total_bobinas - Numberpeso_bobina_cubeta_c8635;
+        var peso_unidad = peso_cubeta_neto / num_unidades;
+
+        /*if (peso_cubeta_neto <= 171.9 || peso_unidad <= 34.4) {
+            console.log('ROJO');
+        }
+        else if ((peso_cubeta_neto > 171.9 && peso_cubeta_neto <= 180) || (peso_unidad > 34.4 && peso_unidad <= 35.9)) {
+            console.log('AMARILLO');
+        }
+        else {
+            console.log('VERDE');
+        }*/
+    });
 });
 
 module.exports = router;
