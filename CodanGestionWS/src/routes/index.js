@@ -194,7 +194,7 @@ router.post('/calcular', (req, res) => {
         var peso_bobina_cubeta_c8635 = datos[0].peso_bobina_cubeta_c8635;
         var num_cubetas = datos[0].num_cubetas
 
-        var peso_cubeta_neto = (peso_cubeta/2) - peso_cubeta_c8231 - peso_total_bobinas - Numberpeso_bobina_cubeta_c8635;
+        var peso_cubeta_neto = (peso_cubeta/2) - peso_cubeta_c8231 - peso_total_bobinas - peso_bobina_cubeta_c8635;
         var peso_unidad = peso_cubeta_neto / num_unidades;
 
         /*if (peso_cubeta_neto <= 171.9 || peso_unidad <= 34.4) {
