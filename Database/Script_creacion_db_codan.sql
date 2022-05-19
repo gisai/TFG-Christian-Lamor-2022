@@ -1,4 +1,4 @@
-#DROP DATABASE codan_gestion_db;
+DROP DATABASE codan_gestion_db;
 CREATE DATABASE codan_gestion_db;
 USE codan_gestion_db;
 
@@ -54,8 +54,15 @@ CREATE TABLE datos (
 );
 INSERT INTO datos VALUES (5, 0.75, 3.75, 21.05, 2.7, 2);
 
-#DROP TABLE cubeta_miniconchas;
-CREATE TABLE cubeta_miniconchas (
+#DROP TABLE productos;
+CREATE TABLE productos (
+	codigo_producto VARCHAR(30) UNIQUE NOT NULL
+);
+INSERT INTO productos VALUES ('miniconchas');
+
+#DROP TABLE miniconchas;
+CREATE TABLE miniconchas (
+	producto VARCHAR(30) NOT NULL,
 	peso_cubeta_neto DECIMAL(4,1) NOT NULL,
     unidad DECIMAL(3,1) NOT NULL,
     hora TIMESTAMP NOT NULL DEFAULT current_timestamp

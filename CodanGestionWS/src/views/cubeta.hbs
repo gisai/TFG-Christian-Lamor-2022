@@ -1,3 +1,12 @@
+{{#each errors}}
+<div class="alert alert-danger alert-dismissible fade show" role="alert">
+    {{text}}
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+{{/each}}
+
 <br />
 <div class="col-md-4 mx-auto">
     <div class="card">
@@ -7,6 +16,7 @@
         <div class="card-body">
             <div class="d-flex justify-content-center">
                 <form action="/calcular" method="POST">
+                    <input type="hidden" name="codigo_semiterminado" value="{{codigo_semiterminado}}" />
                     <div class="form-group">
                         <input type="number" step="any" name="peso_cubeta" class="form-control" placeholder="Peso cubeta" min="0" max="1000" />
                     </div>
@@ -16,7 +26,7 @@
                         </button>
                     </div>
                 </form>
-                <form action="/" method="GET">
+                <form action="/tolerancia" method="GET">
                     <div class="form-group">
                         <button class="btn btn-danger btn-lg" type="submit">
                             Finalizar
@@ -28,3 +38,4 @@
     </div>
 </div>
 <br />
+
