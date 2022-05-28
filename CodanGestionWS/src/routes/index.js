@@ -6,11 +6,11 @@ router.get('/', (req, res) => {
     res.render('index');
 });
 
-router.get('/start', (req, res) => {
-    res.render('start');
+router.get('/inicio', (req, res) => {
+    res.render('inicio');
 });
 
-router.post('/start', (req, res) => {
+router.post('/inicio', (req, res) => {
     var { jefe, linea, producto } = req.body;
     var errors = [];
 
@@ -41,12 +41,12 @@ router.post('/start', (req, res) => {
         pool.query('INSERT INTO inicio_tandas SET ?', [tandaRow], (err, result) => {
             if (err) throw err;
             id_tanda = result.insertId;
-            res.render('incidence', { id_tanda });
+            res.render('incidencia', { id_tanda });
         });
     }
 });
 
-router.post('/incidence/:id', async (req, res) => {
+router.post('/incidencia/:id', async (req, res) => {
     var { id_tanda, descripcion, horaParada, minutosParada, horaReinicio, minutosReinicio } = req.body;
     var errors = [];
 
@@ -60,8 +60,9 @@ router.post('/incidence/:id', async (req, res) => {
         errors.push({ text: "Por favor, rellene el campo \"Hora de reinicio\"." });
     }
     if (errors.length > 0) {
-        res.render('incidence', {
+        res.render('incidencia', {
             errors,
+            id_tanda,
             descripcion,
             horaParada,
             minutosParada,
@@ -78,8 +79,9 @@ router.post('/incidence/:id', async (req, res) => {
             errors.push({ text: "La hora de reinicio debe ser posterior a la hora de parada." });
         }
         if (errors.length > 0) {
-            res.render('incidence', {
+            res.render('incidencia', {
                 errors,
+                id_tanda,
                 descripcion,
                 horaParada,
                 minutosParada,
@@ -98,17 +100,17 @@ router.post('/incidence/:id', async (req, res) => {
                 minutos_perdidos
             }
             await pool.query('INSERT INTO incidencias SET ?', [incidenciaRow]);
-            res.render('incidence', { id_tanda });
+            res.render('incidencia', { id_tanda });
         }
     }
 });
 
-router.post('/eficience/:id', (req, res) => {
+router.post('/eficiencia/:id', (req, res) => {
     var id_tanda = req.body.id_tanda;
-    res.render('eficience', { id_tanda });
+    res.render('eficiencia', { id_tanda });
 });
 
-router.post('/index', async (req, res) => {
+router.post('/fin', async (req, res) => {
     var { id_tanda, id_personalizada, kg_teoricos, kg_reales } = req.body;
     var errors = [];
 
@@ -119,14 +121,16 @@ router.post('/index', async (req, res) => {
         errors.push({ text: "Por favor, rellene el campo \"Kilos reales\"." });
     }
     if (errors.length > 0) {
-        res.render('eficience', {
+        res.render('eficiencia', {
             errors,
+            id_tanda,
             kg_teoricos,
             kg_reales
         });
     }
     else {
         var eficiencia = kg_reales / kg_teoricos * 100;
+        if (id_personalizada == '') id_personalizada = null;
         var eficienciaRow = {
             id_tanda,
             id_personalizada,
@@ -134,8 +138,17 @@ router.post('/index', async (req, res) => {
             kg_reales,
             eficiencia
         }
-        await pool.query('INSERT INTO fin_tandas SET ?', [eficienciaRow]);
-        res.redirect('/');
+        await pool.query('INSERT INTO fin_tandas SET ?', [eficienciaRow], (err, result) => {
+            if (err) {
+                console.log(err.message);
+                errors.push({ text: "Ese id ya existe. Por favor, utilice otro id." });
+                res.render('eficiencia', {
+                    errors,
+                    id_tanda
+                });
+            }
+            else res.redirect('/');
+        });
     }
 });
 
@@ -151,6 +164,7 @@ router.get('/tandas', async (req, res) => {
 router.post('/tandas/buscar', async (req, res) => {
     var id_tanda = req.body.id_tanda;
     var rows;
+
     if (id_tanda == '' || id_tanda == null) {
         pool.query('SELECT * FROM tandas', (err, result) => {
             if (err) throw err;
@@ -167,6 +181,15 @@ router.post('/tandas/buscar', async (req, res) => {
     }
 });
 
+router.post('/tandas/detalles:id', (req, res) => {
+    var id_tanda = req.body.id_tanda;
+    pool.query('SELECT * FROM incidencias WHERE id_tanda = ?', [id_tanda], (err, result) => {
+        if (err) throw err;
+        rows = result;
+        res.render('detalles', { rows, id_tanda });
+    });
+});
+
 router.get('/tolerancia', (req, res) => {
     res.render('tolerancia');
 });
@@ -179,6 +202,7 @@ router.post('/cubeta', (req, res) => {
 router.post('/calcular', (req, res) => {
     var { codigo_semiterminado, peso_cubeta } = req.body;
     var errors = [];
+
     if (!peso_cubeta) {
         errors.push({ text: "Por favor, rellene el campo \"Peso cubeta\"." });
     }
@@ -197,10 +221,21 @@ router.post('/calcular', (req, res) => {
             peso_cubeta_neto,
             unidad
         }
-        pool.query('INSERT INTO ' + producto + ' SET ?', [productoRow], (err, result) => {
+
+        var { nRoj, nAma, nVer, uRoj, uAma, uVer } = 0;
+        if (peso_cubeta_neto < 172.3) nRoj = 1;
+        else if (peso_cubeta_neto < 180) nAma = 1;
+        else if (peso_cubeta_neto < 188.3) nVer = 1;
+        else nAma = 1;
+        if (unidad < 34.5) uRoj = 1;
+        else if (unidad < 36) uAma = 1;
+        else if (unidad < 37.7) uVer = 1;
+        else uAma = 1;
+
+        pool.query('INSERT INTO pesos SET ?', [productoRow], (err, result) => {
             if (err) throw err;
             console.log(productoRow);
-            res.render('cubeta', { codigo_semiterminado, peso_cubeta_neto, unidad, errors });
+            res.render('cubeta', { codigo_semiterminado, peso_cubeta_neto, unidad, errors, nRoj, nAma, nVer, uRoj, uAma, uVer });
         });
     });
 });

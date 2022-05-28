@@ -15,7 +15,7 @@
         </div>
         <div class="card-body">
             <div class="d-flex justify-content-center">
-                <form action="/incidence/{{id_tanda}}" method="POST">
+                <form action="/incidencia/{{id_tanda}}" method="POST">
                     <input type="hidden" name="id_tanda" value="{{id_tanda}}" />
                     <div class="col">
                         <div class="form-group">
@@ -27,12 +27,6 @@
                                 <br />
                                 <select name="horaParada">
                                     <option>--</option>
-                                    <option>00</option>
-                                    <option>01</option>
-                                    <option>02</option>
-                                    <option>03</option>
-                                    <option>04</option>
-                                    <option>05</option>
                                     <option>06</option>
                                     <option>07</option>
                                     <option>08</option>
@@ -51,6 +45,12 @@
                                     <option>21</option>
                                     <option>22</option>
                                     <option>23</option>
+                                    <option>00</option>
+                                    <option>01</option>
+                                    <option>02</option>
+                                    <option>03</option>
+                                    <option>04</option>
+                                    <option>05</option>
                                 </select>
                                 <select name="minutosParada">
                                     <option>--</option>
@@ -121,12 +121,6 @@
                                 <br />
                                 <select name="horaReinicio">
                                     <option>--</option>
-                                    <option>00</option>
-                                    <option>01</option>
-                                    <option>02</option>
-                                    <option>03</option>
-                                    <option>04</option>
-                                    <option>05</option>
                                     <option>06</option>
                                     <option>07</option>
                                     <option>08</option>
@@ -145,6 +139,12 @@
                                     <option>21</option>
                                     <option>22</option>
                                     <option>23</option>
+                                    <option>00</option>
+                                    <option>01</option>
+                                    <option>02</option>
+                                    <option>03</option>
+                                    <option>04</option>
+                                    <option>05</option>
                                 </select>
                                 <select name="minutosReinicio">
                                     <option>--</option>
@@ -219,7 +219,7 @@
                     </div>
                 </form>
                 <hr />
-                <form action="/eficience/{{id_tanda}}" method="POST">
+                <form action="/eficiencia/{{id_tanda}}" method="POST">
                     <input type="hidden" name="id_tanda" value="{{id_tanda}}" />
                     <div class="form-group">
                         <button class="btn btn-danger" type="submit">

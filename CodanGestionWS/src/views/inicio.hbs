@@ -11,24 +11,23 @@
 <div class="col-md-4 mx-auto">
     <div class="card">
         <div class="card-header text-center">
-            <h3>Calcular Eficiencia</h3>
+            <h3>Comenzar Produccion</h3>
         </div>
         <div class="card-body">
             <div class="d-flex justify-content-center">
-                <form action="/index" method="POST">
-                    <input type="hidden" name="id_tanda" value="{{id_tanda}}" />
+                <form action="/inicio" method="POST">
                     <div class="form-group">
-                        <input type="text" name="id_personalizada" class="form-control" placeholder="Id personalizada (opcional)" autofocus maxlength="24"/>
+                        <input type="text" name="jefe" class="form-control" placeholder="Jefe de equipo" autofocus maxlength="50" />
                     </div>
                     <div class="form-group">
-                        <input type="number" step="any" name="kg_teoricos" class="form-control" placeholder="Kilos teoricos" min="0" max="1000" />
+                        <input type="text" name="linea" class="form-control" placeholder="Linea" maxlength="16" />
                     </div>
                     <div class="form-group">
-                        <input type="number" step="any" name="kg_reales" class="form-control" placeholder="Kilos reales" min="0" max="1000" />
+                        <input type="text" name="producto" class="form-control" placeholder="Producto" maxlength="25" />
                     </div>
                     <div class="form-group">
-                        <button class="btn btn-success btn-block">
-                            Terminar
+                        <button class="btn btn-success btn-block" type="submit">
+                            Iniciar
                         </button>
                     </div>
                 </form>

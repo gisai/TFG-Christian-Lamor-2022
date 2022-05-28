@@ -1,12 +1,3 @@
-{{#each errors}}
-<div class="alert alert-danger alert-dismissible fade show" role="alert">
-    {{text}}
-    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-        <span aria-hidden="true">&times;</span>
-    </button>
-</div>
-{{/each}}
-
 <br />
 <div class="col-md-4 mx-auto">
     <div class="card">
@@ -22,7 +13,7 @@
                     </div>
                     <div class="form-group">
                         <button class="btn btn-success btn-lg" type="submit">
-                            Calcular y Enviar
+                            Calcular y enviar
                         </button>
                     </div>
                 </form>
@@ -38,39 +29,3 @@
     </div>
 </div>
 <br />
-
-{{#if nRoj}}
-<div class="alert alert-danger fade show" role="alert">
-    Peso cubeta neto: {{peso_cubeta_neto}}
-</div>
-{{/if}}
-
-{{#if nAma}}
-<div class="alert alert-warning fade show" role="alert">
-    Peso cubeta neto: {{peso_cubeta_neto}}
-</div>
-{{/if}}
-
-{{#if nVer}}
-<div class="alert alert-success fade show" role="alert">
-    Peso cubeta neto: {{peso_cubeta_neto}}
-</div>
-{{/if}}
-
-{{#if uRoj}}
-<div class="alert alert-danger fade show" role="alert">
-    Peso unidad: {{unidad}}
-</div>
-{{/if}}
-
-{{#if uAma}}
-<div class="alert alert-warning fade show" role="alert">
-    Peso unidad: {{unidad}}
-</div>
-{{/if}}
-
-{{#if uVer}}
-<div class="alert alert-success fade show" role="alert">
-    Peso unidad: {{unidad}}
-</div>
-{{/if}}

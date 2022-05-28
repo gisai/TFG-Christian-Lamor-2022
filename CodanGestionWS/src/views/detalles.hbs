@@ -1,0 +1,38 @@
+<br />
+<div class="col-md-4 mx-auto">
+    <div class="card">
+        <div class="card-header text-center">
+            <h3>Tanda #{{id_tanda}}</h3>
+            <h5>#(id_pers)</h5>
+        </div>
+        <div class="card-body">
+            <div class="d-flex justify-content-center">
+                <a href="/tandas" class="btn btn-danger btn-lg">Atras</a>
+            </div>
+        </div>
+    </div>
+</div>
+<br />
+
+<table class="table text-center">
+    <tr class="thead-dark">
+        <th scope="col">Id Tanda</th>
+        <th scope="col">Id Incidencia</th>
+        <th scope="col">Descripcion</th>
+        <th scope="col">Hora Parada</th>
+        <th scope="col">Hora Reinicio</th>
+        <th scope="col">Minutos Perdidos</th>
+    </tr>
+    {{#each rows}}
+    <tr class="table-light">
+        <th scope="row">{{id}}</th>
+        <td>{{id_tanda}}</td>
+        <td>{{id_incidencia}}</td>
+        <td>{{descripcion}}</td>
+        <td>{{hora_parada}}</td>
+        <td>{{hora_reinicio}}</td>
+        <td>{{minutos_perdidos}}</td>
+    </tr>
+    {{/each}}
+</table>
+<br />

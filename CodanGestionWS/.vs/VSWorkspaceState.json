@@ -2,10 +2,9 @@
   "ExpandedNodes": [
     "",
     "\\src",
-    "\\src\\helpers",
     "\\src\\routes",
     "\\src\\views"
   ],
-  "SelectedNode": "\\src\\routes\\index.js",
+  "SelectedNode": "\\src\\views\\tandas.hbs",
   "PreviewInSolutionExplorer": false
 }
