@@ -1,6 +1,5 @@
-node_modules
+# Backup files
 *.bak
-tmp/
 
 # Logs
 logs
