@@ -11,7 +11,7 @@ router.get('/inicio', (req, res) => {
 });
 
 router.post('/inicio', (req, res) => {
-    var { jefe, linea, producto } = req.body;
+    var { jefe, linea, producto, id_personalizada } = req.body;
     var errors = [];
 
     if (!jefe) {
@@ -24,24 +24,40 @@ router.post('/inicio', (req, res) => {
         errors.push({ text: "Por favor, rellene el campo \"Producto\"." });
     }
     if (errors.length > 0) {
-        res.render('start', {
+        res.render('inicio', {
             errors,
+            id_personalizada,
             jefe,
             linea,
             producto
         });
     }
     else {
+        if (id_personalizada == '') id_personalizada = null;
         var tandaRow = {
+            id_personalizada,
             jefe,
             linea,
             producto
         }
-        var id_tanda;
         pool.query('INSERT INTO inicio_tandas SET ?', [tandaRow], (err, result) => {
-            if (err) throw err;
-            id_tanda = result.insertId;
-            res.render('incidencia', { id_tanda });
+            if (err) {
+                if (err.code === 'ER_DUP_ENTRY') {
+                    console.log(err.message);
+                    errors.push({ text: "Ese id ya existe. Por favor, utilice otro id o deje el campo vacio." });
+                    res.render('inicio', {
+                        errors,
+                        id_personalizada,
+                        jefe,
+                        linea,
+                        producto
+                    });
+                }
+            }
+            else {
+                var id_tanda = result.insertId;
+                res.render('incidencia', { id_tanda });
+            }
         });
     }
 });
@@ -110,8 +126,8 @@ router.post('/eficiencia/:id', (req, res) => {
     res.render('eficiencia', { id_tanda });
 });
 
-router.post('/fin', async (req, res) => {
-    var { id_tanda, id_personalizada, kg_teoricos, kg_reales } = req.body;
+router.post('/fin', (req, res) => {
+    var { id_tanda, kg_teoricos, kg_reales } = req.body;
     var errors = [];
 
     if (!kg_teoricos) {
@@ -130,45 +146,34 @@ router.post('/fin', async (req, res) => {
     }
     else {
         var eficiencia = kg_reales / kg_teoricos * 100;
-        if (id_personalizada == '') id_personalizada = null;
         var eficienciaRow = {
             id_tanda,
-            id_personalizada,
             kg_teoricos,
             kg_reales,
             eficiencia
         }
-        await pool.query('INSERT INTO fin_tandas SET ?', [eficienciaRow], (err, result) => {
-            if (err) {
-                console.log(err.message);
-                errors.push({ text: "Ese id ya existe. Por favor, utilice otro id." });
-                res.render('eficiencia', {
-                    errors,
-                    id_tanda
-                });
-            }
-            else res.redirect('/');
+        pool.query('INSERT INTO fin_tandas SET ?', [eficienciaRow], (err, result) => {
+            if (err) throw err;
+            res.redirect('/');
         });
     }
 });
 
-router.get('/tandas', async (req, res) => {
-    var rows;
+router.get('/tandas', (req, res) => {
     pool.query('SELECT * FROM tandas', (err, result) => {
         if (err) throw err;
-        rows = result;
+        var rows = result;
         res.render('tandas', { rows });
     });
 });
 
-router.post('/tandas/buscar', async (req, res) => {
+router.post('/tandas/buscar', (req, res) => {
     var id_tanda = req.body.id_tanda;
-    var rows;
 
     if (id_tanda == '' || id_tanda == null) {
         pool.query('SELECT * FROM tandas', (err, result) => {
             if (err) throw err;
-            rows = result;
+            var rows = result;
             res.render('tandas', { rows });
         });
     }
@@ -183,61 +188,137 @@ router.post('/tandas/buscar', async (req, res) => {
 
 router.post('/tandas/detalles:id', (req, res) => {
     var id_tanda = req.body.id_tanda;
-    pool.query('SELECT * FROM incidencias WHERE id_tanda = ?', [id_tanda], (err, result) => {
+    pool.query('SELECT * FROM tandas WHERE id = ?', [id_tanda], (err, result) => {
         if (err) throw err;
-        rows = result;
-        res.render('detalles', { rows, id_tanda });
+        var tanda = result;
+        pool.query('SELECT * FROM incidencias WHERE id_tanda = ?', [id_tanda], (err, secResult) => {
+            if (err) throw err;
+            var incidenciaRows = secResult;
+            pool.query('SELECT * FROM pesos WHERE id_tanda = ?', [id_tanda], (err, thirdResult) => {
+                if (err) throw err;
+                var pesoRows = thirdResult;
+                res.render('detalles', { tanda, incidenciaRows, pesoRows, id_tanda });
+            });
+        });
     });
+
 });
 
-router.get('/tolerancia', (req, res) => {
-    res.render('tolerancia');
+router.get('/inicio-pesaje', (req, res) => {
+    res.render('inicio-pesaje');
 });
 
-router.post('/cubeta', (req, res) => {
-    var codigo_semiterminado = req.body.codigo_semiterminado;
-    res.render('cubeta', { codigo_semiterminado });
+router.post('/inicio-pesaje', (req, res) => {
+    var { id_tanda, id_personalizada, codigo_semiterminado } = req.body;
+    var errors = [];
+
+    if (id_personalizada == '') id_personalizada = null
+    if (!id_tanda && !id_personalizada) {
+        errors.push({ text: "Por favor, introduzca el numero de tanda o su id asociada." });
+    }
+    if (codigo_semiterminado == "--") {
+        errors.push({ text: "Por favor, seleccione un producto." });
+    }
+    if (errors.length > 0) {
+        res.render('inicio-pesaje', {
+            errors,
+            id_tanda,
+            id_personalizada,
+            codigo_semiterminado
+        });
+    }
+    else {
+        if (!id_tanda) {
+            pool.query('SELECT id FROM inicio_tandas WHERE id_personalizada = ?', [id_personalizada], (err, result) => {
+                if (err) throw err;
+                else {
+                    if (result && result.length == 0) {
+                        errors.push({ text: "Ese id no existe. Por favor, introduzca otro id." });
+                        res.render('inicio-pesaje', { id_tanda, codigo_semiterminado, errors });
+                    }
+                    else {
+                        id_tanda = result[0].id;
+                        res.render('pesaje', { id_tanda, codigo_semiterminado });
+                    }
+                }
+            });
+        }
+        else {
+            pool.query('SELECT id FROM inicio_tandas WHERE id = ?', [id_tanda], (err, result) => {
+                if (err) throw err;
+                else {
+                    if (result && result.length == 0) {
+                        errors.push({ text: "Ese numero de tanda no existe. Por favor, introduzca otro numero de tanda." });
+                        res.render('inicio-pesaje', { id_tanda, codigo_semiterminado, errors });
+                    }
+                    else {
+                        res.render('pesaje', { id_tanda, codigo_semiterminado });
+                    }
+                }
+            });
+        }
+    }
 });
 
-router.post('/calcular', (req, res) => {
-    var { codigo_semiterminado, peso_cubeta } = req.body;
+router.post('/pesaje', (req, res) => {
+    var { id_tanda, codigo_semiterminado, peso_cubeta } = req.body;
     var errors = [];
 
     if (!peso_cubeta) {
         errors.push({ text: "Por favor, rellene el campo \"Peso cubeta\"." });
     }
-    pool.query('SELECT * FROM datos', (err, result) => {
-        if (err) throw err;
-        var datos = result;
-        var num_unidades = datos[0].num_unidades;
-        var peso_total_bobinas = datos[0].peso_total_bobinas;
-        var peso_cubeta_c8231 = datos[0].peso_cubeta_c8231;
-        var peso_bobina_cubeta_c8635 = datos[0].peso_bobina_cubeta_c8635;
-        var peso_cubeta_neto = (peso_cubeta/2) - peso_cubeta_c8231 - peso_total_bobinas - peso_bobina_cubeta_c8635;
-        var unidad = peso_cubeta_neto / num_unidades;
-        var producto = codigo_semiterminado;
-        var productoRow = {
-            producto,
-            peso_cubeta_neto,
-            unidad
-        }
-
-        var { nRoj, nAma, nVer, uRoj, uAma, uVer } = 0;
-        if (peso_cubeta_neto < 172.3) nRoj = 1;
-        else if (peso_cubeta_neto < 180) nAma = 1;
-        else if (peso_cubeta_neto < 188.3) nVer = 1;
-        else nAma = 1;
-        if (unidad < 34.5) uRoj = 1;
-        else if (unidad < 36) uAma = 1;
-        else if (unidad < 37.7) uVer = 1;
-        else uAma = 1;
-
-        pool.query('INSERT INTO pesos SET ?', [productoRow], (err, result) => {
-            if (err) throw err;
-            console.log(productoRow);
-            res.render('cubeta', { codigo_semiterminado, peso_cubeta_neto, unidad, errors, nRoj, nAma, nVer, uRoj, uAma, uVer });
+    if (errors.length > 0) {
+        res.render('pesaje', {
+            errors,
+            id_tanda,
+            codigo_semiterminado
         });
-    });
+    }
+    else {
+        pool.query('SELECT * FROM datos', (err, result) => {
+            if (err) throw err;
+            var datos = result;
+
+            var num_unidades = datos[0].num_unidades;
+            var peso_total_bobinas = datos[0].peso_total_bobinas;
+            var peso_cubeta_c8231 = datos[0].peso_cubeta_c8231;
+            var peso_bobina_cubeta_c8635 = datos[0].peso_bobina_cubeta_c8635;
+            var peso_cubeta_neto = (peso_cubeta / 2) - peso_cubeta_c8231 - peso_total_bobinas - peso_bobina_cubeta_c8635;
+            var unidad = peso_cubeta_neto / num_unidades;
+
+            var producto = codigo_semiterminado;
+            var productoRow = {
+                id_tanda,
+                producto,
+                peso_cubeta_neto,
+                unidad
+            }
+
+            var { nRoj, nAma, nVer, uRoj, uAma, uVer } = 0;
+            if (peso_cubeta_neto < 172.3) nRoj = 1;
+            else if (peso_cubeta_neto < 180) nAma = 1;
+            else if (peso_cubeta_neto < 188.3) nVer = 1;
+            else nAma = 1;
+            if (unidad < 34.5) uRoj = 1;
+            else if (unidad < 36) uAma = 1;
+            else if (unidad < 37.7) uVer = 1;
+            else uAma = 1;
+
+            pool.query('INSERT INTO pesos SET ?', [productoRow], (err, result) => {
+                if (err) {
+                    if (err.code === 'ER_NO_REFERENCED_ROW') {
+                        errors.push({ text: "Ese id no existe. Por favor, introduzca otro id." });
+                        res.render('inicio-pesaje', { id_tanda, codigo_semiterminado, errors })
+                    }
+                    else throw err;
+                }
+                else {
+                    console.log(productoRow);
+                    res.render('pesaje', { id_tanda, codigo_semiterminado, peso_cubeta_neto, unidad, errors, nRoj, nAma, nVer, uRoj, uAma, uVer });
+                }
+            });
+        });
+    }
 });
 
 module.exports = router;

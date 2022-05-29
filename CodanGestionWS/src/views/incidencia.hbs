@@ -12,6 +12,7 @@
     <div class="card">
         <div class="card-header text-center">
             <h3>Registrar Incidencia</h3>
+            <h5>(Tanda #{{id_tanda}})</h5>
         </div>
         <div class="card-body">
             <div class="d-flex justify-content-center">
@@ -23,7 +24,7 @@
                         </div>
                         <div class="row">
                             <div class="form-group col-md-6 text-center">
-                                <label><strong>Hora de <br />parada</strong></label>
+                                <label><b>Hora de <br />parada</b></label>
                                 <br />
                                 <select name="horaParada">
                                     <option>--</option>
@@ -52,6 +53,7 @@
                                     <option>04</option>
                                     <option>05</option>
                                 </select>
+                                <b>:</b>
                                 <select name="minutosParada">
                                     <option>--</option>
                                     <option>00</option>
@@ -117,7 +119,7 @@
                                 </select>
                             </div>
                             <div class="form-group col-md-6 text-center">
-                                <label><strong>Hora de reinicio</strong></label>
+                                <label><b>Hora de reinicio</b></label>
                                 <br />
                                 <select name="horaReinicio">
                                     <option>--</option>
@@ -146,6 +148,7 @@
                                     <option>04</option>
                                     <option>05</option>
                                 </select>
+                                <b>:</b>
                                 <select name="minutosReinicio">
                                     <option>--</option>
                                     <option>00</option>
@@ -218,7 +221,9 @@
                         </div>
                     </div>
                 </form>
-                <hr />
+            </div>
+            <hr />
+            <div class="d-flex justify-content-center">
                 <form action="/eficiencia/{{id_tanda}}" method="POST">
                     <input type="hidden" name="id_tanda" value="{{id_tanda}}" />
                     <div class="form-group">

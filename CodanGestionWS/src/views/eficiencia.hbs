@@ -12,14 +12,12 @@
     <div class="card">
         <div class="card-header text-center">
             <h3>Calcular Eficiencia</h3>
+            <h5>(Tanda #{{id_tanda}})</h5>
         </div>
         <div class="card-body">
             <div class="d-flex justify-content-center">
                 <form action="/fin" method="POST">
                     <input type="hidden" name="id_tanda" value="{{id_tanda}}" />
-                    <div class="form-group">
-                        <input type="text" name="id_personalizada" class="form-control" placeholder="Id (opcional)" autofocus maxlength="24"/>
-                    </div>
                     <div class="form-group">
                         <input type="number" step="any" name="kg_teoricos" class="form-control" placeholder="Kilos teoricos" min="0" max="1000" />
                     </div>
@@ -28,7 +26,7 @@
                     </div>
                     <div class="form-group">
                         <button class="btn btn-success btn-block">
-                            Terminar
+                            Terminar y Volver
                         </button>
                     </div>
                 </form>

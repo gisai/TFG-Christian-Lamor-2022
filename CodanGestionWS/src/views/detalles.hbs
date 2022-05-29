@@ -1,11 +1,40 @@
 <br />
-<div class="col-md-4 mx-auto">
-    <div class="card">
+<div>
+    <div class="card" style="width: 100%">
         <div class="card-header text-center">
             <h3>Tanda #{{id_tanda}}</h3>
-            <h5>#(id_pers)</h5>
         </div>
         <div class="card-body">
+            <table class="table text-center">
+                <tr class="thead-dark">
+                    <th scope="col">Id</th>
+                    <th scope="col">Id Personalizada</th>
+                    <th scope="col">Jefe</th>
+                    <th scope="col">Linea</th>
+                    <th scope="col">Producto</th>
+                    <th scope="col">Inicio</th>
+                    <th scope="col">Fin</th>
+                    <th scope="col">Kg Teoricos</th>
+                    <th scope="col">Kg Reales</th>
+                    <th scope="col">Eficiencia (%)</th>
+                    <th scope="col">Numero Incidencias</th>
+                </tr>
+                {{#each tanda}}
+                <tr class="table-light">
+                    <th scope="row">{{id}}</th>
+                    <td>{{id_personalizada}}</td>
+                    <td>{{jefe}}</td>
+                    <td>{{linea}}</td>
+                    <td>{{producto}}</td>
+                    <td>{{fechahora_inicio}}</td>
+                    <td>{{fechahora_fin}}</td>
+                    <td>{{kg_teoricos}}</td>
+                    <td>{{kg_reales}}</td>
+                    <td>{{eficiencia}}</td>
+                    <td>{{num_incidencias}}</td>
+                </tr>
+                {{/each}}
+            </table>
             <div class="d-flex justify-content-center">
                 <a href="/tandas" class="btn btn-danger btn-lg">Atras</a>
             </div>
@@ -13,7 +42,7 @@
     </div>
 </div>
 <br />
-
+<h5>Incidencias</h5>
 <table class="table text-center">
     <tr class="thead-dark">
         <th scope="col">Id Tanda</th>
@@ -23,10 +52,10 @@
         <th scope="col">Hora Reinicio</th>
         <th scope="col">Minutos Perdidos</th>
     </tr>
-    {{#each rows}}
+    {{#if incidenciaRows}}
+    {{#each incidenciaRows}}
     <tr class="table-light">
-        <th scope="row">{{id}}</th>
-        <td>{{id_tanda}}</td>
+        <th scope="row">{{id_tanda}}</th>
         <td>{{id_incidencia}}</td>
         <td>{{descripcion}}</td>
         <td>{{hora_parada}}</td>
@@ -34,5 +63,55 @@
         <td>{{minutos_perdidos}}</td>
     </tr>
     {{/each}}
+    {{else}}
+    <tr class="table-light">
+        <th scope="row">-</th>
+        <td>-</td>
+        <td>-</td>
+        <td>-</td>
+        <td>-</td>
+        <td>-</td>
+    </tr>
+    {{/if}}
 </table>
+<br />
+<h5>Pesos</h5>
+<table class="table text-center">
+    <tr class="thead-dark">
+        <th scope="col">Id Tanda</th>
+        <th scope="col">Producto</th>
+        <th scope="col">Peso Neto</th>
+        <th scope="col">Peso Unidad</th>
+        <th scope="col">Hora</th>
+    </tr>
+    {{#if pesoRows}}
+    {{#each pesoRows}}
+    <tr class="table-light">
+        <th scope="row">{{id_tanda}}</th>
+        <td>{{producto}}</td>
+        <td>{{peso_cubeta_neto}}</td>
+        <td>{{unidad}}</td>
+        <td>{{hora}}</td>
+    </tr>
+    {{/each}}
+    {{else}}
+    <tr class="table-light">
+        <th scope="row">-</th>
+        <td>-</td>
+        <td>-</td>
+        <td>-</td>
+        <td>-</td>
+    </tr>
+    {{/if}}
+</table>
+<br />
+<div class="col-md-4 mx-auto">
+    <div class="card">
+        <div class="card-body">
+            <div class="d-flex justify-content-center">
+                GRAFICO
+            </div>
+        </div>
+    </div>
+</div>
 <br />

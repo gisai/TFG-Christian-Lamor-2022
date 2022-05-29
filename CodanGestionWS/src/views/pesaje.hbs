@@ -15,21 +15,26 @@
         </div>
         <div class="card-body">
             <div class="d-flex justify-content-center">
-                <form action="/calcular" method="POST">
+                <form action="/pesaje" method="POST">
+                    <input type="hidden" name="id_tanda" value="{{id_tanda}}" />
+                    <input type="hidden" name="id_personalizada" value="{{id_personalizada}}" />
                     <input type="hidden" name="codigo_semiterminado" value="{{codigo_semiterminado}}" />
                     <div class="form-group">
                         <input type="number" step="any" name="peso_cubeta" class="form-control" placeholder="Peso cubeta" min="0" max="1000" />
                     </div>
                     <div class="form-group">
-                        <button class="btn btn-success btn-lg" type="submit">
+                        <button class="btn btn-success btn-lg btn-block" type="submit">
                             Calcular y Enviar
                         </button>
                     </div>
                 </form>
-                <form action="/tolerancia" method="GET">
+            </div>
+            <hr />
+            <div class="d-flex justify-content-center">
+                <form action="/" method="GET">
                     <div class="form-group">
                         <button class="btn btn-danger btn-lg" type="submit">
-                            Finalizar
+                            Terminar y Volver
                         </button>
                     </div>
                 </form>

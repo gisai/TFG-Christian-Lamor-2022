@@ -29,8 +29,8 @@
 <br />
 <table class="table text-center">
     <tr class="thead-dark">
-        <th scope="col">Id</th>
-        <th scope="col">Id Personalizada</th>
+        <th scope="col">Numero Tanda</th>
+        <th scope="col">Id Tanda</th>
         <th scope="col">Jefe</th>
         <th scope="col">Linea</th>
         <th scope="col">Producto</th>
@@ -38,32 +38,49 @@
         <th scope="col">Fin</th>
         <th scope="col">Kg Teoricos</th>
         <th scope="col">Kg Reales</th>
-        <th scope="col">Eficiencia (%)</th>
+        <th scope="col">Eficiencia Peso (%)</th>
         <th scope="col">Numero Incidencias</th>
         <th scope="col">Detalles</th>
     </tr>
-    {{#each rows}}
-    <tr class="table-light">
-        <th scope="row">{{id}}</th>
-        <td>{{id_personalizada}}</td>
-        <td>{{jefe}}</td>
-        <td>{{linea}}</td>
-        <td>{{producto}}</td>
-        <td>{{fechahora_inicio}}</td>
-        <td>{{fechahora_fin}}</td>
-        <td>{{kg_teoricos}}</td>
-        <td>{{kg_reales}}</td>
-        <td>{{eficiencia}}</td>
-        <td>{{num_incidencias}}</td>
-        <td>
-            <form action="/tandas/detalles:{{id}}" method="POST">
-                <input type="hidden" name="id_tanda" value="{{id}}" />
-                <button class="btn btn-primary btn-lg" type="submit">
-                    <b>+</b>
-                </button>
-            </form>
-        </td>
-    </tr>
-    {{/each}}
+    {{#if rows}}
+        {{#each rows}}
+        <tr class="table-light">
+            <th scope="row">{{id}}</th>
+            <td>{{id_personalizada}}</td>
+            <td>{{jefe}}</td>
+            <td>{{linea}}</td>
+            <td>{{producto}}</td>
+            <td>{{fechahora_inicio}}</td>
+            <td>{{fechahora_fin}}</td>
+            <td>{{kg_teoricos}}</td>
+            <td>{{kg_reales}}</td>
+            <td>{{eficiencia}}</td>
+            <td>{{num_incidencias}}</td>
+            <td>
+                <form action="/tandas/detalles:{{id}}" method="POST">
+                    <input type="hidden" name="id_tanda" value="{{id}}" />
+                    <button class="btn btn-primary btn-lg" type="submit">
+                        <b>+</b>
+                    </button>
+                </form>
+            </td>
+        </tr>
+        {{/each}}
+    {{else}}
+        <tr class="table-light">
+            <th scope="row">-</th>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+        </tr>
+    {{/if}}
 </table>
 <br />
