@@ -1,13 +1,13 @@
-var express = require('express');
-var path = require('path');
-var exphbs = require('express-handlebars');
-var methodOverride = require('method-override');
-var session = require('express-session');
-var flash = require('express-flash');
-var db = require('./database');
+const express = require('express');
+const path = require('path');
+const exphbs = require('express-handlebars');
+const methodOverride = require('method-override');
+const session = require('express-session');
+const flash = require('express-flash');
+const db = require('./database');
 
 // Initializations
-var app = express();
+const app = express();
 
 // Settings
 app.set('port', process.env.PORT || 3000);

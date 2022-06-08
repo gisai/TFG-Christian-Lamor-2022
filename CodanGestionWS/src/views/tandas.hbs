@@ -8,7 +8,7 @@
             <div class="d-flex justify-content-center">
                 <form action="/tandas/buscar" method="POST">
                     <div class="input-group">
-                        <input type="text" name="id_tanda" class="form-control" placeholder="Introduzca un ID..." autofocus />
+                        <input type="text" name="id_tanda" class="form-control" placeholder="Introduzca # o ID..." autofocus />
                         <button class="btn btn-success btn-lg" type="submit">
                             Buscar
                         </button>
@@ -45,7 +45,7 @@
     {{#if rows}}
         {{#each rows}}
         <tr class="table-light">
-            <th scope="row">{{id}}</th>
+            <th scope="row">#{{id}}</th>
             <td>{{id_personalizada}}</td>
             <td>{{jefe}}</td>
             <td>{{linea}}</td>

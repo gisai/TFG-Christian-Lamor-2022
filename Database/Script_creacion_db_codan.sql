@@ -1,11 +1,11 @@
-DROP DATABASE codan_gestion_db;
+#DROP DATABASE codan_gestion_db;
 CREATE DATABASE codan_gestion_db;
 USE codan_gestion_db;
 
 #DROP TABLE inicio_tandas;
 CREATE TABLE inicio_tandas (
 	id INT UNIQUE NOT NULL AUTO_INCREMENT,
-	id_personalizada VARCHAR(24) UNIQUE,
+	id_personalizada VARCHAR(40) UNIQUE,
     jefe VARCHAR(50) NOT NULL,
     linea VARCHAR(16) NOT NULL,
     producto VARCHAR(25) NOT NULL,
@@ -19,7 +19,7 @@ CREATE TABLE fin_tandas (
 	fechahora_fin TIMESTAMP NOT NULL DEFAULT current_timestamp,
     kg_teoricos DECIMAL(10,3) NOT NULL,
     kg_reales DECIMAL(10,3) NOT NULL,
-    eficiencia DECIMAL(10,3) NOT NULL,
+    eficiencia DECIMAL(12,3) NOT NULL,
     FOREIGN KEY (id_tanda) REFERENCES inicio_tandas(id),
     PRIMARY KEY (id_tanda)
 );
@@ -28,7 +28,7 @@ CREATE TABLE fin_tandas (
 CREATE TABLE incidencias (
     id_tanda INT NOT NULL,
     id_incidencia INT UNIQUE NOT NULL AUTO_INCREMENT,
-	descripcion VARCHAR(140) NOT NULL,
+	descripcion VARCHAR(180) NOT NULL,
     hora_parada TIME NOT NULL,
     hora_reinicio TIME NOT NULL,
     minutos_perdidos DECIMAL,
@@ -66,13 +66,12 @@ INSERT INTO productos VALUES ('miniconchas');
 #DROP TABLE pesos;
 CREATE TABLE pesos (
     id_tanda INT NOT NULL,
-	#id_personalizada VARCHAR(24),
 	producto VARCHAR(30) NOT NULL,
-	peso_cubeta_neto DECIMAL(4,1) NOT NULL,
-    unidad DECIMAL(3,1) NOT NULL,
+    peso_cubeta DECIMAL(9,3) NOT NULL,
+	peso_cubeta_neto DECIMAL(6,3) NOT NULL,
+    unidad DECIMAL(6,3) NOT NULL,
     hora TIMESTAMP NOT NULL DEFAULT current_timestamp,
     FOREIGN KEY (id_tanda) REFERENCES inicio_tandas(id),
 	FOREIGN KEY (producto) REFERENCES productos(codigo_producto),
-	#FOREIGN KEY (id_personalizada) REFERENCES inicio_tandas(id_personalizada),
-    PRIMARY KEY (id_tanda)
+    PRIMARY KEY (id_tanda, hora)
 );
