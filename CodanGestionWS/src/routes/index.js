@@ -198,11 +198,15 @@ router.post('/tandas/detalles:id', (req, res) => {
             pool.query('SELECT * FROM pesos WHERE id_tanda = ?', [id_tanda], (err, thirdResult) => {
                 if (err) throw err;
                 let pesoRows = thirdResult;
-                let chartData = {
-                    Horas: ["8", "8.15", "8:30"],
-                    Data: [37, 24, 39]
-                }
-                res.render('detalles', { tanda, incidenciaRows, pesoRows, id_tanda, chartData });
+                let datos = [];
+                pesoRows.forEach(elemento => {
+                    let fila = [];
+                    fila.push(elemento.hora.toLocaleTimeString());
+                    fila.push(elemento.peso_cubeta_neto);
+                    fila.push(elemento.unidad);
+                    datos.push(fila);
+                });
+                res.render('detalles', { tanda, incidenciaRows, pesoRows, id_tanda, datos });
             });
         });
     });

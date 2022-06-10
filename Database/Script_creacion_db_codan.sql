@@ -1,4 +1,4 @@
-#DROP DATABASE codan_gestion_db;
+DROP DATABASE codan_gestion_db;
 CREATE DATABASE codan_gestion_db;
 USE codan_gestion_db;
 
@@ -8,7 +8,7 @@ CREATE TABLE inicio_tandas (
 	id_personalizada VARCHAR(40) UNIQUE,
     jefe VARCHAR(50) NOT NULL,
     linea VARCHAR(16) NOT NULL,
-    producto VARCHAR(25) NOT NULL,
+    producto VARCHAR(30) NOT NULL,
     fechahora_inicio TIMESTAMP NOT NULL DEFAULT current_timestamp,
     PRIMARY KEY (id)
 );

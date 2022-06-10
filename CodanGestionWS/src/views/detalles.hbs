@@ -45,7 +45,6 @@
 <h5>Incidencias</h5>
 <table class="table text-center">
     <tr class="thead-dark">
-        <th scope="col">Id Tanda</th>
         <th scope="col">Id Incidencia</th>
         <th scope="col">Descripcion</th>
         <th scope="col">Hora Parada</th>
@@ -55,8 +54,7 @@
     {{#if incidenciaRows}}
     {{#each incidenciaRows}}
     <tr class="table-light">
-        <th scope="row">#{{id_tanda}}</th>
-        <td>{{id_incidencia}}</td>
+        <th scope="row">#{{id_incidencia}}</th>
         <td>{{descripcion}}</td>
         <td>{{hora_parada}}</td>
         <td>{{hora_reinicio}}</td>
@@ -70,7 +68,6 @@
         <td>-</td>
         <td>-</td>
         <td>-</td>
-        <td>-</td>
     </tr>
     {{/if}}
 </table>
@@ -80,8 +77,9 @@
     <tr class="thead-dark">
         <th scope="col">Id Tanda</th>
         <th scope="col">Producto</th>
-        <th scope="col">Peso Neto</th>
-        <th scope="col">Peso Unidad</th>
+        <th scope="col">Peso (g)</th>
+        <th scope="col">Peso Neto (g)</th>
+        <th scope="col">Peso Unidad (g)</th>
         <th scope="col">Hora</th>
     </tr>
     {{#if pesoRows}}
@@ -89,6 +87,7 @@
     <tr class="table-light">
         <th scope="row">#{{id_tanda}}</th>
         <td>{{producto}}</td>
+        <td>{{peso_cubeta}}</td>
         <td>{{peso_cubeta_neto}}</td>
         <td>{{unidad}}</td>
         <td>{{hora}}</td>
@@ -109,19 +108,35 @@
 <script type="text/javascript">
     google.charts.load('current', { 'packages': ['corechart'] });
     google.charts.setOnLoadCallback(drawVisualization);
+
+    var datos = [['Hora', 'Peso Neto', 'Peso Unidad']];
+    let datosString = '{{ datos }}';
+    var datosArray = datosString.split(",");
+
+    let i = 1;
+    let fila = [];
+    datosArray.forEach(elemento => {
+        if (i % 3 != 1) elemento = Number(elemento);
+        fila.push(elemento);
+        if (i % 3 == 0) {
+            datos.push(fila);
+            fila = []
+        }
+        i++;
+    });
+
     function drawVisualization() {
-        var data = google.visualization.arrayToDataTable([
-            ['Hora', 'Peso Neto', 'Peso Unidad'],
-            ['08:00', 36, 40]
-        ]);
+        var data = google.visualization.arrayToDataTable(
+            datos
+        );
         var options = {
-            title: 'Pesos tanda {{id_tanda}}',
+            title: 'Pesos tanda #{{id_tanda}}',
             vAxis: { title: 'Peso' },
             hAxis: { title: 'Hora' },
             seriesType: 'bars',
             series: { 2: { type: 'line' } }
         };
-        var chart = new google.visualization.ComboChart(document.getElementById('chart_div'));
+        var chart = new google.visualization.ColumnChart(document.getElementById('chart_div'));
         chart.draw(data, options);
     }
 </script>

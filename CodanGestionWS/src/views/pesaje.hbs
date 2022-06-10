@@ -20,7 +20,7 @@
                     <input type="hidden" name="id_tanda" value="{{id_tanda}}" />
                     <input type="hidden" name="codigo_semiterminado" value="{{codigo_semiterminado}}" />
                     <div class="form-group">
-                        <input type="number" step="0.001" name="peso_cubeta" class="form-control" placeholder="Peso cubeta" min="0" max="1000" />
+                        <input type="number" step="0.001" name="peso_cubeta" class="form-control" placeholder="Peso cubeta (g)" min="0" max="1000" />
                     </div>
                     <div class="form-group">
                         <button class="btn btn-success btn-lg btn-block" type="submit">
@@ -43,25 +43,6 @@
     </div>
 </div>
 <br />
-<!--
-<div id="neto" class=""></div>
-<script>
-    pool.query('SELECT * FROM datos', (err, result) => {
-        if (err) throw err;
-        var datos = result;
-
-        var num_unidades = datos[0].num_unidades;
-        var peso_total_bobinas = datos[0].peso_total_bobinas;
-        var peso_cubeta_c8231 = datos[0].peso_cubeta_c8231;
-        var peso_bobina_cubeta_c8635 = datos[0].peso_bobina_cubeta_c8635;
-        var peso_cubeta_neto = (peso_cubeta / 2) - peso_cubeta_c8231 - peso_total_bobinas - peso_bobina_cubeta_c8635;
-        var unidad = peso_cubeta_neto / num_unidades;
-
-        if (peso_cubeta_neto < 172.3) {
-
-        }
-    });
-</script>-->
 
 {{#if nRoj}}
 <div class="alert alert-danger fade show" role="alert">
