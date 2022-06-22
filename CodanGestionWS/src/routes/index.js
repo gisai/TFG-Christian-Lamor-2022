@@ -199,14 +199,23 @@ router.post('/tandas/detalles:id', (req, res) => {
                 if (err) throw err;
                 let pesoRows = thirdResult;
                 let datos = [];
+                let media = 0, varianza = 0, numElem = 0;
                 pesoRows.forEach(elemento => {
                     let fila = [];
                     fila.push(elemento.hora.toLocaleTimeString());
-                    fila.push(elemento.peso_cubeta_neto);
+                    //fila.push(elemento.peso_cubeta_neto);
                     fila.push(elemento.unidad);
+                    //fila.push(elemento.peso_cubeta);
                     datos.push(fila);
+                    media = media + elemento.unidad;
+                    numElem++;
                 });
-                res.render('detalles', { tanda, incidenciaRows, pesoRows, id_tanda, datos });
+                media = (media / numElem).toFixed(4);
+                pesoRows.forEach(elemento => {
+                    varianza = varianza + Math.pow(elemento.unidad - media, 2);
+                });
+                varianza = (varianza / numElem).toFixed(4);
+                res.render('detalles', { tanda, incidenciaRows, pesoRows, id_tanda, datos, media, varianza });
             });
         });
     });

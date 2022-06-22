@@ -1,5 +1,5 @@
 body {
-    background: #1488CC;
+    background-color: #000f;
     /* fallback for old browsers */
     background: -webkit-linear-gradient(to right, #2B32B2, #1488CC);
     /* Chrome 10-25, Safari 5.1-6 */
@@ -7,29 +7,23 @@ body {
     /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
 }
 
-.footer {
-    position: relative;
-    width: 100%;
-    min-height: 200px;
-    padding: 120px 0;
-    z-index: 1;
-}
 
 .upm {
     display: flex;
     justify-content: center;
     align-items: center;
-    position: absolute;
+    position: relative;
     bottom: 75px;
 }
 
 .img {
     width: 10%;
     height: 10%;
+    position: relative;
 }
 
 .footer-text {
-    position: absolute;
+    position: relative;
     bottom: 10px;
     text-align: center;
     width: 100%;

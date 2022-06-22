@@ -1,4 +1,4 @@
-DROP DATABASE codan_gestion_db;
+#DROP DATABASE codan_gestion_db;
 CREATE DATABASE codan_gestion_db;
 USE codan_gestion_db;
 

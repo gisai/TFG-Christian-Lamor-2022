@@ -8,8 +8,8 @@
             <div class="d-flex justify-content-center">
                 <form action="/tandas/buscar" method="POST">
                     <div class="input-group">
-                        <input type="text" name="id_tanda" class="form-control" placeholder="Introduzca # o ID..." autofocus />
-                        <button class="btn btn-success btn-lg" type="submit">
+                        <input type="text" name="id_tanda" class="form-control" placeholder="Introduzca # o ID..." />
+                        <button class="btn btn-success btn-lg" type="submit" autofocus style="margin-left: 10px;" >
                             Buscar
                         </button>
                     </div>
@@ -26,6 +26,7 @@
         </div>
     </div>
 </div>
+<p class="text-center"><b>Tip:</b> puede filtrar por fecha pulsando 'Ctrl + F' y escribiendo el mes y el anio. Por ejemplo: Jun 22.</p>
 <br />
 <table class="table text-center">
     <tr class="thead-dark">
@@ -38,7 +39,7 @@
         <th scope="col">Fin</th>
         <th scope="col">Kg Teoricos</th>
         <th scope="col">Kg Reales</th>
-        <th scope="col">Eficiencia Peso (%)</th>
+        <th scope="col">Eficiencia Kg (%)</th>
         <th scope="col">Numero Incidencias</th>
         <th scope="col">Detalles</th>
     </tr>

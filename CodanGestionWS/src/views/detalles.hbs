@@ -16,7 +16,7 @@
                     <th scope="col">Fin</th>
                     <th scope="col">Kg Teoricos</th>
                     <th scope="col">Kg Reales</th>
-                    <th scope="col">Eficiencia (%)</th>
+                    <th scope="col">Eficiencia Kg (%)</th>
                     <th scope="col">Numero Incidencias</th>
                 </tr>
                 {{#each tanda}}
@@ -104,21 +104,32 @@
     {{/if}}
 </table>
 <br />
+
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 <script type="text/javascript">
     google.charts.load('current', { 'packages': ['corechart'] });
     google.charts.setOnLoadCallback(drawVisualization);
 
-    var datos = [['Hora', 'Peso Neto', 'Peso Unidad']];
+    var datos = [['Hora', /*'Peso Neto',*/ 'Peso Unidad', {role: 'style'}]];
     let datosString = '{{ datos }}';
     var datosArray = datosString.split(",");
 
     let i = 1;
     let fila = [];
+    let previo;
     datosArray.forEach(elemento => {
-        if (i % 3 != 1) elemento = Number(elemento);
+        if (i % 2 != 1) {
+            elemento = Number(elemento);
+            previo = elemento;
+        }
         fila.push(elemento);
-        if (i % 3 == 0) {
+        if (i % 2 == 0) {
+            if (previo <= 34.4) fila.push('#C8566B');
+            else if (previo <= 35.9) fila.push('#F2D48F');
+            else if (previo <= 37.6) fila.push('#9EC299');
+            else if (previo <= 39.2) fila.push('#F2D48F');
+            else fila.push('#C8566B');
+
             datos.push(fila);
             fila = []
         }
@@ -130,17 +141,32 @@
             datos
         );
         var options = {
-            title: 'Pesos tanda #{{id_tanda}}',
-            vAxis: { title: 'Peso' },
+            title: 'Pesos por unidad (Tanda #{{id_tanda}})',
+            vAxis: {
+                title: 'Peso',
+                viewWindowMode: 'explicit',
+                viewWindow: { max: 42.5, min: 25 }
+            },
             hAxis: { title: 'Hora' },
             seriesType: 'bars',
-            series: { 2: { type: 'line' } }
+            colors: ['#C8566B', '#F2D48F', '#9EC299'],
+            series: { 2: { type: 'line' } },
+            legend: { position: 'none' },
         };
         var chart = new google.visualization.ColumnChart(document.getElementById('chart_div'));
         chart.draw(data, options);
     }
 </script>
-<div class="col-md-10 mx-auto">
-    <div id="chart_div" style="width: 900px; height: 500px;"></div>
+<div class="col-md-10 mx-auto" style="width: 100%;">
+    <div id="chart_div" style="width: 895px; height: 500px;"></div>
+    <table class="table text-center">
+        <tr class="table-light">
+            <th scope="row">Media: </th>
+            <td>{{media}}</td>
+            <th scope="row">||</th>
+            <th scope="row">Varianza: </th>
+            <td>{{varianza}}</td>
+        </tr>
+    </table>
 </div>
 <br />
