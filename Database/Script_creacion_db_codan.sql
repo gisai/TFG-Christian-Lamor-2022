@@ -2,6 +2,13 @@
 CREATE DATABASE codan_gestion_db;
 USE codan_gestion_db;
 
+#DROP TABLE productos;
+CREATE TABLE productos (
+	codigo_producto VARCHAR(30) UNIQUE NOT NULL
+);
+INSERT INTO productos VALUES ('Miniconchas');
+INSERT INTO productos VALUES ('PRUEBA');
+
 #DROP TABLE inicio_tandas;
 CREATE TABLE inicio_tandas (
 	id INT UNIQUE NOT NULL AUTO_INCREMENT,
@@ -10,7 +17,8 @@ CREATE TABLE inicio_tandas (
     linea VARCHAR(16) NOT NULL,
     producto VARCHAR(30) NOT NULL,
     fechahora_inicio TIMESTAMP NOT NULL DEFAULT current_timestamp,
-    PRIMARY KEY (id)
+    PRIMARY KEY (id),
+    FOREIGN KEY (producto) REFERENCES productos(codigo_producto)
 );
 
 #DROP TABLE fin_tandas;
@@ -56,12 +64,6 @@ CREATE TABLE datos (
     num_cubetas INT NOT NULL
 );
 INSERT INTO datos VALUES (5, 0.75, 3.75, 21.05, 2.7, 2);
-
-#DROP TABLE productos;
-CREATE TABLE productos (
-	codigo_producto VARCHAR(30) UNIQUE NOT NULL
-);
-INSERT INTO productos VALUES ('miniconchas');
 
 #DROP TABLE pesos;
 CREATE TABLE pesos (

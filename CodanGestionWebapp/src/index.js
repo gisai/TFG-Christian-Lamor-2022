@@ -34,7 +34,7 @@ app.use(flash());
 
 
 // Routes
-app.use(require('./routes/index'));
+app.use(require('./routes/rutas'));
 
 // Static Files
 app.use(express.static(path.join(__dirname, 'public')));

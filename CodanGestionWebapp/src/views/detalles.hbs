@@ -75,7 +75,6 @@
 <h5>Pesos</h5>
 <table class="table text-center">
     <tr class="thead-dark">
-        <th scope="col">Id Tanda</th>
         <th scope="col">Producto</th>
         <th scope="col">Peso (g)</th>
         <th scope="col">Peso Neto (g)</th>
@@ -85,7 +84,6 @@
     {{#if pesoRows}}
     {{#each pesoRows}}
     <tr class="table-light">
-        <th scope="row">#{{id_tanda}}</th>
         <td>{{producto}}</td>
         <td>{{peso_cubeta}}</td>
         <td>{{peso_cubeta_neto}}</td>
@@ -105,6 +103,7 @@
 </table>
 <br />
 
+{{#if pesoRows}}
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 <script type="text/javascript">
     google.charts.load('current', { 'packages': ['corechart'] });
@@ -169,4 +168,5 @@
         </tr>
     </table>
 </div>
+{{/if}}
 <br />

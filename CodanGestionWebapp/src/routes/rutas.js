@@ -20,7 +20,13 @@ router.get('/', (req, res) => {
 });
 
 router.get('/inicio', (req, res) => {
-    res.render('inicio');
+    pool.query('SELECT codigo_producto FROM productos', (err, result) => {
+        if (err) throw err;
+        else {
+            let productos = result;
+            res.render('inicio', { productos });
+        }
+    });
 });
 
 router.post('/inicio', (req, res) => {
@@ -33,12 +39,16 @@ router.post('/inicio', (req, res) => {
     if (!linea) {
         errors.push({ text: "Por favor, rellene el campo \"Linea\"." });
     }
-    if (!producto) {
-        errors.push({ text: "Por favor, rellene el campo \"Producto\"." });
+    if (producto == '--') {
+        errors.push({ text: "Por favor, seleccione un producto." });
     }
     if (errors.length > 0) {
-        res.render('inicio', {
-            errors
+        pool.query('SELECT codigo_producto FROM productos', (err, result) => {
+            if (err) throw err;
+            else {
+                let productos = result;
+                res.render('inicio', { errors, productos });
+            }
         });
     }
     else {
@@ -223,7 +233,13 @@ router.post('/tandas/detalles:id', (req, res) => {
 });
 
 router.get('/inicio-pesaje', (req, res) => {
-    res.render('inicio-pesaje');
+    pool.query('SELECT codigo_producto FROM productos', (err, result) => {
+        if (err) throw err;
+        else {
+            let productos = result;
+            res.render('inicio-pesaje', { productos });
+        }
+    });
 });
 
 router.post('/inicio-pesaje', (req, res) => {
@@ -238,8 +254,12 @@ router.post('/inicio-pesaje', (req, res) => {
         errors.push({ text: "Por favor, seleccione un producto." });
     }
     if (errors.length > 0) {
-        res.render('inicio-pesaje', {
-            errors
+        pool.query('SELECT codigo_producto FROM productos', (err, result) => {
+            if (err) throw err;
+            else {
+                let productos = result;
+                res.render('inicio-pesaje', { errors, productos });
+            }
         });
     }
     else {

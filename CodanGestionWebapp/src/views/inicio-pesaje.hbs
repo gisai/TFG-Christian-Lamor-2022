@@ -28,7 +28,9 @@
                         <label style="padding-right: 10px;"><b>Codigo de semiterminado:</b></label>
                         <select type="text" name="codigo_semiterminado">
                             <option>--</option>
-                            <option value="miniconchas">Miniconchas</option>
+                            {{#each productos}}
+                                <option value="{{codigo_producto}}">{{codigo_producto}}</option>
+                            {{/each}}
                         </select>
                     </div>
                     <br />
