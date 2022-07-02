@@ -7,7 +7,6 @@ CREATE TABLE productos (
 	codigo_producto VARCHAR(30) UNIQUE NOT NULL
 );
 INSERT INTO productos VALUES ('Miniconchas');
-INSERT INTO productos VALUES ('PRUEBA');
 
 #DROP TABLE inicio_tandas;
 CREATE TABLE inicio_tandas (
