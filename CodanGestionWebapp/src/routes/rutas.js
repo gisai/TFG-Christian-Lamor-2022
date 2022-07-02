@@ -165,7 +165,9 @@ router.post('/fin', (req, res) => {
         }
         pool.query('INSERT INTO fin_tandas SET ?', [eficienciaRow], (err, result) => {
             if (err) throw err;
-            res.redirect('/');
+            else {
+                res.redirect('/');
+            }
         });
     }
 });
@@ -173,8 +175,10 @@ router.post('/fin', (req, res) => {
 router.get('/tandas', (req, res) => {
     pool.query('SELECT * FROM tandas', (err, result) => {
         if (err) throw err;
-        let rows = result;
-        res.render('tandas', { rows });
+        else {
+            let rows = result;
+            res.render('tandas', { rows });
+        }
     });
 });
 
@@ -184,15 +188,19 @@ router.post('/tandas/buscar', (req, res) => {
     if (id_tanda == '' || id_tanda == null) {
         pool.query('SELECT * FROM tandas', (err, result) => {
             if (err) throw err;
-            let rows = result;
-            res.render('tandas', { rows });
+            else {
+                let rows = result;
+                res.render('tandas', { rows });
+            }
         });
     }
     else {
         pool.query('SELECT * FROM tandas WHERE id = ? OR id_personalizada = ?', [id_tanda, id_tanda], (err, result) => {
             if (err) throw err;
-            rows = result;
-            res.render('tandas', { rows });
+            else {
+                rows = result;
+                res.render('tandas', { rows });
+            }
         });
     }
 });
@@ -204,29 +212,29 @@ router.post('/tandas/detalles:id', (req, res) => {
         let tanda = result;
         pool.query('SELECT * FROM incidencias WHERE id_tanda = ?', [id_tanda], (err, secResult) => {
             if (err) throw err;
-            let incidenciaRows = secResult;
-            pool.query('SELECT * FROM pesos WHERE id_tanda = ?', [id_tanda], (err, thirdResult) => {
-                if (err) throw err;
-                let pesoRows = thirdResult;
-                let datos = [];
-                let media = 0, varianza = 0, numElem = 0;
-                pesoRows.forEach(elemento => {
-                    let fila = [];
-                    fila.push(elemento.hora.toLocaleTimeString());
-                    //fila.push(elemento.peso_cubeta_neto);
-                    fila.push(elemento.unidad);
-                    //fila.push(elemento.peso_cubeta);
-                    datos.push(fila);
-                    media = media + elemento.unidad;
-                    numElem++;
+            else {
+                let incidenciaRows = secResult;
+                pool.query('SELECT * FROM pesos WHERE id_tanda = ?', [id_tanda], (err, thirdResult) => {
+                    if (err) throw err;
+                    let pesoRows = thirdResult;
+                    let datos = [];
+                    let media = 0, varianza = 0, numElem = 0;
+                    pesoRows.forEach(elemento => {
+                        let fila = [];
+                        fila.push(elemento.hora.toLocaleTimeString());
+                        fila.push(elemento.unidad);
+                        datos.push(fila);
+                        media = media + elemento.unidad;
+                        numElem++;
+                    });
+                    media = (media / numElem).toFixed(4);
+                    pesoRows.forEach(elemento => {
+                        varianza = varianza + Math.pow(elemento.unidad - media, 2);
+                    });
+                    varianza = (varianza / numElem).toFixed(4);
+                    res.render('detalles', { tanda, incidenciaRows, pesoRows, id_tanda, datos, media, varianza });
                 });
-                media = (media / numElem).toFixed(4);
-                pesoRows.forEach(elemento => {
-                    varianza = varianza + Math.pow(elemento.unidad - media, 2);
-                });
-                varianza = (varianza / numElem).toFixed(4);
-                res.render('detalles', { tanda, incidenciaRows, pesoRows, id_tanda, datos, media, varianza });
-            });
+            }
         });
     });
 
@@ -342,17 +350,19 @@ router.post('/pesaje', (req, res) => {
 
             pool.query('INSERT INTO pesos SET ?', [productoRow], (err, result) => {
                 if (err) throw err;
-                contexto_peso.id_tanda = id_tanda;
-                contexto_peso.codigo_semiterminado = codigo_semiterminado;
-                contexto_peso.peso_cubeta_neto = peso_cubeta_neto;
-                contexto_peso.unidad = unidad;
-                contexto_peso.nRoj = nRoj;
-                contexto_peso.nAma = nAma;
-                contexto_peso.nVer = nVer;
-                contexto_peso.uRoj = uRoj;
-                contexto_peso.uAma = uAma;
-                contexto_peso.uVer = uVer;
-                res.redirect('/pesaje');
+                else {
+                    contexto_peso.id_tanda = id_tanda;
+                    contexto_peso.codigo_semiterminado = codigo_semiterminado;
+                    contexto_peso.peso_cubeta_neto = peso_cubeta_neto;
+                    contexto_peso.unidad = unidad;
+                    contexto_peso.nRoj = nRoj;
+                    contexto_peso.nAma = nAma;
+                    contexto_peso.nVer = nVer;
+                    contexto_peso.uRoj = uRoj;
+                    contexto_peso.uAma = uAma;
+                    contexto_peso.uVer = uVer;
+                    res.redirect('/pesaje');
+                }
             });
         });
     }

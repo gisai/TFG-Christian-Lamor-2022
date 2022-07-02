@@ -12,7 +12,7 @@
     <div class="card">
         <div class="card-header text-center">
             <h3>Introducir Peso</h3>
-            <h5>Tanda #{{id_tanda}}</h5>
+            <h5>(Tanda #{{id_tanda}})</h5>
         </div>
         <div class="card-body">
             <div class="d-flex justify-content-center">
@@ -20,7 +20,7 @@
                     <input type="hidden" name="id_tanda" value="{{id_tanda}}" />
                     <input type="hidden" name="codigo_semiterminado" value="{{codigo_semiterminado}}" />
                     <div class="form-group">
-                        <input type="number" step="0.001" name="peso_cubeta" class="form-control" placeholder="Peso cubeta (g)" min="0" max="1000" />
+                        <input type="number" step="0.001" name="peso_cubeta" class="form-control" placeholder="Peso cubeta (g)" min="0" max="1000" autofocus />
                     </div>
                     <div class="form-group">
                         <button class="btn btn-success btn-lg btn-block" type="submit">

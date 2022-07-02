@@ -85,9 +85,9 @@
     {{#each pesoRows}}
     <tr class="table-light">
         <td>{{producto}}</td>
-        <td>{{peso_cubeta}}</td>
-        <td>{{peso_cubeta_neto}}</td>
-        <td>{{unidad}}</td>
+        <td>{{peso_cubeta}}g</td>
+        <td>{{peso_cubeta_neto}}g</td>
+        <td>{{unidad}}g</td>
         <td>{{hora}}</td>
     </tr>
     {{/each}}
@@ -109,7 +109,7 @@
     google.charts.load('current', { 'packages': ['corechart'] });
     google.charts.setOnLoadCallback(drawVisualization);
 
-    var datos = [['Hora', /*'Peso Neto',*/ 'Peso Unidad', {role: 'style'}]];
+    var datos = [['Hora', 'Peso Unidad', {role: 'style'}]];
     let datosString = '{{ datos }}';
     var datosArray = datosString.split(",");
 
