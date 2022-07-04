@@ -63,12 +63,12 @@ router.post('/inicio', (req, res) => {
             if (err) {
                 if (err.code === 'ER_DUP_ENTRY') {
                     errors.push({ text: "Ese id ya existe. Por favor, utilice otro id o deje el campo vacio." });
-                    res.render('inicio', {
-                        errors,
-                        id_personalizada,
-                        jefe,
-                        linea,
-                        producto
+                    pool.query('SELECT codigo_producto FROM productos', (err, result) => {
+                        if (err) throw err;
+                        else {
+                            let productos = result;
+                            res.render('inicio', { errors, productos });
+                        }
                     });
                 }
             }
@@ -277,7 +277,13 @@ router.post('/inicio-pesaje', (req, res) => {
                 else {
                     if (result && result.length == 0) {
                         errors.push({ text: "Ese id no existe. Por favor, introduzca otro id." });
-                        res.render('inicio-pesaje', { errors });
+                        pool.query('SELECT codigo_producto FROM productos', (err, result) => {
+                            if (err) throw err;
+                            else {
+                                let productos = result;
+                                res.render('inicio-pesaje', { errors, productos });
+                            }
+                        });
                     }
                     else {
                         id_tanda = result[0].id;
@@ -292,10 +298,33 @@ router.post('/inicio-pesaje', (req, res) => {
                 else {
                     if (result && result.length == 0) {
                         errors.push({ text: "Ese numero de tanda no existe. Por favor, introduzca otro numero de tanda." });
-                        res.render('inicio-pesaje', { errors });
+                        pool.query('SELECT codigo_producto FROM productos', (err, result) => {
+                            if (err) throw err;
+                            else {
+                                let productos = result;
+                                res.render('inicio-pesaje', { errors, productos });
+                            }
+                        });
                     }
                     else {
-                        res.render('pesaje', { id_tanda, codigo_semiterminado });
+                        pool.query('SELECT producto FROM inicio_tandas WHERE id = ?', [id_tanda], (err, result) => {
+                            if (err) throw err;
+                            else {
+                                if (result[0].producto != codigo_semiterminado) {
+                                    errors.push({ text: "Ese producto no corresponde a esa tanda. Por favor, seleccione el producto adecuado." });
+                                    pool.query('SELECT codigo_producto FROM productos', (err, result) => {
+                                        if (err) throw err;
+                                        else {
+                                            let productos = result;
+                                            res.render('inicio-pesaje', { errors, productos });
+                                        }
+                                    });
+                                } else {
+                                    res.render('pesaje', { id_tanda, codigo_semiterminado });
+
+                                }
+                            }
+                        });
                     }
                 }
             });

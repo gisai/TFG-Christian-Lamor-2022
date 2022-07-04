@@ -54,7 +54,7 @@ CREATE VIEW tandas AS (
 );
 
 #DROP TABLE datos;
-CREATE TABLE datos (
+CREATE TABLE datos_miniconchas (
 	num_unidades INT NOT NULL,
     peso_bobina_c8086 DECIMAL(4,2) NOT NULL,
     peso_total_bobinas DECIMAL(4,2) NOT NULL,
@@ -62,7 +62,7 @@ CREATE TABLE datos (
     peso_bobina_cubeta_c8635 DECIMAL(4,2) NOT NULL,
     num_cubetas INT NOT NULL
 );
-INSERT INTO datos VALUES (5, 0.75, 3.75, 21.05, 2.7, 2);
+INSERT INTO datos_miniconchas VALUES (5, 0.75, 3.75, 21.05, 2.7, 2);
 
 #DROP TABLE pesos;
 CREATE TABLE pesos (
