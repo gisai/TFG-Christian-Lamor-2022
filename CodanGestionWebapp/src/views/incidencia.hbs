@@ -221,16 +221,33 @@
             </div>
             <hr />
             <div class="d-flex justify-content-center">
-                <form action="/eficiencia/{{id_tanda}}" method="POST">
-                    <input type="hidden" name="id_tanda" value="{{id_tanda}}" />
-                    <div class="form-group">
-                        <button class="btn btn-danger" type="submit">
-                            Finalizar
-                        </button>
-                    </div>
-                </form>
+                <button class="btn btn-danger" data-toggle="modal" data-target="#modal-1">
+                    Finalizar
+                </button>
             </div>
         </div>
     </div>
 </div>
 <p class="text-center"><b>Importante:</b> no cerrar esta ventana o ir hacia atras. Se perderian los datos de la tanda.  </p>
+
+<form action="/eficiencia/{{id_tanda}}" method="POST">
+    <input type="hidden" name="id_tanda" value="{{id_tanda}}" />
+    <div class="modal fade" id="modal-1" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header text-center d-block">
+                    <h5 class="modal-title" id="exampleModalLabel">Finalizar produccion</h5>
+                </div>
+                <div class="modal-body text-center d-block">
+                    <img src="/assets/img/warning1.png" style="width: 10%;" /><br /><br />
+                    Esta seguro de que quiere finalizar la produccion? <br />
+                    No podra introducir nuevas incidencias.
+                </div>
+                <div class="modal-footer" style="justify-content: center">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar y volver</button>
+                    <button type="submit" class="btn btn-danger">Aceptar y finalizar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

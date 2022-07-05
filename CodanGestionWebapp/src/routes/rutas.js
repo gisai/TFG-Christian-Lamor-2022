@@ -347,52 +347,56 @@ router.post('/pesaje', (req, res) => {
         });
     }
     else {
-        pool.query('SELECT * FROM datos', (err, result) => {
+        pool.query('SELECT * FROM datos WHERE producto = ?', [codigo_semiterminado], (err, result) => {
             if (err) throw err;
-            let datos = result;
+            else {
+                let datos = result;
+                let num_unidades = datos[0].num_unidades;
+                let peso_total_bobinas = datos[0].peso_total_bobinas;
+                let peso_cubeta_c8231 = datos[0].peso_cubeta_c8231;
+                let peso_bobina_cubeta_c8635 = datos[0].peso_bobina_cubeta_c8635;
+                let peso_cubeta_neto = (peso_cubeta / 2) - peso_cubeta_c8231 - peso_total_bobinas - peso_bobina_cubeta_c8635;
+                let unidad = peso_cubeta_neto / num_unidades;
 
-            let num_unidades = datos[0].num_unidades;
-            let peso_total_bobinas = datos[0].peso_total_bobinas;
-            let peso_cubeta_c8231 = datos[0].peso_cubeta_c8231;
-            let peso_bobina_cubeta_c8635 = datos[0].peso_bobina_cubeta_c8635;
-            let peso_cubeta_neto = (peso_cubeta / 2) - peso_cubeta_c8231 - peso_total_bobinas - peso_bobina_cubeta_c8635;
-            let unidad = peso_cubeta_neto / num_unidades;
-
-            let producto = codigo_semiterminado;
-            let productoRow = {
-                id_tanda,
-                producto,
-                peso_cubeta,
-                peso_cubeta_neto,
-                unidad
-            }
-
-            let { nRoj, nAma, nVer, uRoj, uAma, uVer } = 0;
-            if (peso_cubeta_neto < 172.3) nRoj = 1;
-            else if (peso_cubeta_neto < 180) nAma = 1;
-            else if (peso_cubeta_neto < 188.3) nVer = 1;
-            else nAma = 1;
-            if (unidad < 34.5) uRoj = 1;
-            else if (unidad < 36) uAma = 1;
-            else if (unidad < 37.7) uVer = 1;
-            else uAma = 1;
-
-            pool.query('INSERT INTO pesos SET ?', [productoRow], (err, result) => {
-                if (err) throw err;
-                else {
-                    contexto_peso.id_tanda = id_tanda;
-                    contexto_peso.codigo_semiterminado = codigo_semiterminado;
-                    contexto_peso.peso_cubeta_neto = peso_cubeta_neto;
-                    contexto_peso.unidad = unidad;
-                    contexto_peso.nRoj = nRoj;
-                    contexto_peso.nAma = nAma;
-                    contexto_peso.nVer = nVer;
-                    contexto_peso.uRoj = uRoj;
-                    contexto_peso.uAma = uAma;
-                    contexto_peso.uVer = uVer;
-                    res.redirect('/pesaje');
+                let producto = codigo_semiterminado;
+                let productoRow = {
+                    id_tanda,
+                    producto,
+                    peso_cubeta,
+                    peso_cubeta_neto,
+                    unidad
                 }
-            });
+
+                let { nRoj, nAma, nVer, uRoj, uAma, uVer } = 0;
+                if (peso_cubeta_neto < 172.3) nRoj = 1;
+                else if (peso_cubeta_neto < 180) nAma = 1;
+                else if (peso_cubeta_neto < 188.3) nVer = 1;
+                else if (peso_cubeta_neto < 196.1) nAma = 1;
+                else nRoj = 1;
+
+                if (unidad < 34.5) uRoj = 1;
+                else if (unidad < 36) uAma = 1;
+                else if (unidad < 37.7) uVer = 1;
+                else if (unidad < 39.3) uAma = 1;
+                else uRoj = 1;
+
+                pool.query('INSERT INTO pesos SET ?', [productoRow], (err, result) => {
+                    if (err) throw err;
+                    else {
+                        contexto_peso.id_tanda = id_tanda;
+                        contexto_peso.codigo_semiterminado = codigo_semiterminado;
+                        contexto_peso.peso_cubeta_neto = peso_cubeta_neto;
+                        contexto_peso.unidad = unidad;
+                        contexto_peso.nRoj = nRoj;
+                        contexto_peso.nAma = nAma;
+                        contexto_peso.nVer = nVer;
+                        contexto_peso.uRoj = uRoj;
+                        contexto_peso.uAma = uAma;
+                        contexto_peso.uVer = uVer;
+                        res.redirect('/pesaje');
+                    }
+                });
+            }
         });
     }
 });
