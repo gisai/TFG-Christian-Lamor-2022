@@ -1,5 +1,5 @@
 {
-  "name": "codangestionws",
+  "name": "codangestionwebapp",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -11,7 +11,7 @@
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.19.2",
-    "express": "^4.17.3",
+    "express": "^4.18.1",
     "express-flash": "^0.0.2",
     "express-handlebars": "^6.0.3",
     "express-session": "^1.17.2",
