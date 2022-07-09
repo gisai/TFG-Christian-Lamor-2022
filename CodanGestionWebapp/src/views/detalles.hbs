@@ -112,7 +112,7 @@
     var datos = [['Hora', 'Peso Unidad', {role: 'style'}]];
     let datosString = '{{ datos }}';
     var datosArray = datosString.split(",");
-
+    console.log('{{ limites.inferior_rojo }}')
     let i = 1;
     let fila = [];
     let previo;
@@ -123,10 +123,10 @@
         }
         fila.push(elemento);
         if (i % 2 == 0) {
-            if (previo <= 34.4) fila.push('#C8566B');
-            else if (previo <= 35.9) fila.push('#F2D48F');
-            else if (previo <= 37.6) fila.push('#9EC299');
-            else if (previo <= 39.2) fila.push('#F2D48F');
+            if (previo <= '{{ limites.inferior_rojo }}') fila.push('#C8566B');
+            else if (previo <= '{{ limites.inferior_ama }}') fila.push('#F2D48F');
+            else if (previo <= '{{ limites.superior_ama }}') fila.push('#9EC299');
+            else if (previo <= '{{ limites.superior_rojo }}') fila.push('#F2D48F');
             else fila.push('#C8566B');
 
             datos.push(fila);
@@ -134,6 +134,11 @@
         }
         i++;
     });
+
+    let minimo = '{{ limites.inferior_rojo }}';
+    minimo = minimo - (minimo * 0.1);
+    let maximo = Number('{{ limites.superior_rojo }}');
+    maximo = maximo + (maximo * 0.1);
 
     function drawVisualization() {
         var data = google.visualization.arrayToDataTable(
@@ -144,7 +149,7 @@
             vAxis: {
                 title: 'Peso',
                 viewWindowMode: 'explicit',
-                viewWindow: { max: 42.5, min: 25 }
+                viewWindow: { max: maximo, min: minimo }
             },
             hAxis: { title: 'Hora' },
             seriesType: 'bars',

@@ -8,6 +8,27 @@ CREATE TABLE productos (
 );
 INSERT INTO productos VALUES ('Miniconchas');
 
+#DROP TABLE datos;
+CREATE TABLE datos (
+	producto VARCHAR(30) UNIQUE NOT NULL,
+	num_unidades INT NOT NULL,
+    peso_bobina_c8086 DECIMAL(4,2) NOT NULL,
+    peso_total_bobinas DECIMAL(4,2) NOT NULL,
+    peso_cubeta_c8231 DECIMAL(4,2) NOT NULL,
+    peso_bobina_cubeta_c8635 DECIMAL(4,2) NOT NULL,
+    num_cubetas INT NOT NULL,
+    lim_neto_inferior_rojo DECIMAL(7,3) NOT NULL,
+	lim_neto_inferior_amarillo DECIMAL(7,3) NOT NULL,
+	lim_neto_superior_amarillo DECIMAL(7,3) NOT NULL,
+    lim_neto_superior_rojo DECIMAL(7,3) NOT NULL,
+    lim_unidad_inferior_rojo DECIMAL(7,3) NOT NULL,
+	lim_unidad_inferior_amarillo DECIMAL(7,3) NOT NULL,
+	lim_unidad_superior_amarillo DECIMAL(7,3) NOT NULL,
+    lim_unidad_superior_rojo DECIMAL(7,3) NOT NULL,
+    FOREIGN KEY (producto) REFERENCES productos(codigo_producto)
+);
+INSERT INTO datos VALUES ('Miniconchas', 5, 0.75, 3.75, 21.05, 2.7, 2, 171.9, 179.6, 187.9, 196.0, 34.4, 35.9, 37.6, 39.2);
+
 #DROP TABLE inicio_tandas;
 CREATE TABLE inicio_tandas (
 	id INT UNIQUE NOT NULL AUTO_INCREMENT,
@@ -52,19 +73,6 @@ CREATE VIEW tandas AS (
     FROM inicio_tandas 
     INNER JOIN fin_tandas ON inicio_tandas.id = fin_tandas.id_tanda
 );
-
-#DROP TABLE datos;
-CREATE TABLE datos (
-	producto VARCHAR(30) UNIQUE NOT NULL,
-	num_unidades INT NOT NULL,
-    peso_bobina_c8086 DECIMAL(4,2) NOT NULL,
-    peso_total_bobinas DECIMAL(4,2) NOT NULL,
-    peso_cubeta_c8231 DECIMAL(4,2) NOT NULL,
-    peso_bobina_cubeta_c8635 DECIMAL(4,2) NOT NULL,
-    num_cubetas INT NOT NULL,
-    FOREIGN KEY (producto) REFERENCES productos(codigo_producto)
-);
-INSERT INTO datos VALUES ('Miniconchas', 5, 0.75, 3.75, 21.05, 2.7, 2);
 
 #DROP TABLE pesos;
 CREATE TABLE pesos (
