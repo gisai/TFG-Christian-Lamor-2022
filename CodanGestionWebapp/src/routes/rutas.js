@@ -184,6 +184,7 @@ router.get('/tandas', (req, res) => {
 
 router.post('/tandas/buscar', (req, res) => {
     let id_tanda = req.body.id_tanda;
+    let id_pers = '%' + id_tanda + '%';
 
     if (id_tanda == '' || id_tanda == null) {
         pool.query('SELECT * FROM tandas', (err, result) => {
@@ -195,7 +196,7 @@ router.post('/tandas/buscar', (req, res) => {
         });
     }
     else {
-        pool.query('SELECT * FROM tandas WHERE id = ? OR id_personalizada = ?', [id_tanda, id_tanda], (err, result) => {
+        pool.query('SELECT * FROM tandas WHERE id = ? OR id_personalizada LIKE ?', [id_tanda, id_pers], (err, result) => {
             if (err) throw err;
             else {
                 rows = result;
